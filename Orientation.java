@@ -5,8 +5,15 @@ package waterdrop;
  * @author humzah
  */
 import java.util.ArrayList;
+import org.apache.commons.lang3.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
-public class Orientation {
+public class Orientation implements Cloneable, Serializable {
 
     public int[] ONE;
     public int[] TWO;
@@ -54,6 +61,30 @@ public class Orientation {
         }
     }
 
+    public Orientation clone() {
+        try {
+            return (Orientation) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
+    }
+
+    public Orientation deepClone() {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(this);
+
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            return (Orientation) ois.readObject();
+        } catch (IOException e) {
+            return null;
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
+    }
+
     public String toString() {
         String string = "";
         for (int val : this.currentOrientation) {
@@ -66,8 +97,8 @@ public class Orientation {
     public void changePositions(int x, int y) {
         //takes a grid reference x and y
         //applies the change to all the Orientations of the orientation object
-        x *= 100;
-        y *= 100;
+        x = (x * 100);
+        y = (y * 100);
         this.changePosition(this.ONE, x, y);
         this.changePosition(this.TWO, x, y);
         this.changePosition(this.THREE, x, y);
@@ -76,7 +107,9 @@ public class Orientation {
 
     public void changePosition(int[] orientation, int xDiff, int yDiff) {
         //updates position for a given orientation
-        this.ONE[0] += xDiff;
-        this.ONE[1] += yDiff;
+        //System.out.println("xdiff = " + xDiff);
+        //System.out.println("ydiff = " + yDiff);
+        orientation[0] += xDiff;
+        orientation[1] += yDiff;
     }
 }

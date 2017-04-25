@@ -4,9 +4,15 @@ package waterdrop;
  *
  * @author humzah
  */
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import javafx.scene.canvas.GraphicsContext;
 
-public class Block {
+public class Block implements Cloneable, Serializable {
 
     int x;
     int y;
@@ -15,8 +21,9 @@ public class Block {
     Orientation orientation;
 
     Block() {
-        
+
     }
+
     Block(int x, int y, int w, int h, int x2, int y2, int w2, int h2, int x3, int y3, int w3, int h3, int x4, int y4, int w4, int h4) {
         this.x = x;
         this.y = y;
@@ -63,21 +70,39 @@ public class Block {
     }
 
     public void rotate() {
-       /* System.out.println("----------------------------------------------------");
-        System.out.print("next orientation = ");
-        for (int val : this.orientation.next()) {
-            System.out.println(val + " ,");
-        }
-        System.out.println("----------------------------------------------------");
-        */this.orientation.currentOrientation = this.orientation.next();
+        this.orientation.currentOrientation = this.orientation.next();
         this.update();
     }
 
-    private void update() {
+    public void update() {
         this.x = this.orientation.currentOrientation[0];
         this.y = this.orientation.currentOrientation[1];
         this.width = this.orientation.currentOrientation[2];
         this.height = this.orientation.currentOrientation[3];
+    }
+
+    public Block clone() {
+        try {
+            return (Block) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
+    }
+
+    public Block deepClone() {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(this);
+
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            return (Block) ois.readObject();
+        } catch (IOException e) {
+            return null;
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
     }
 
     @Override

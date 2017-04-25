@@ -48,43 +48,32 @@ public class WaterDrop extends Application {
         theStage.setScene(theScene);
 
         Canvas canvas = new Canvas(1400, 700);
+        GraphicsContext ctx = canvas.getGraphicsContext2D();
+        double height = ctx.getCanvas().getHeight();
+        double width = ctx.getCanvas().getWidth();
+
+        int numRows = (int) height / 100;
+        int numColumns = (int) width / 100;
         /*canvas.setHeight(300);
-canvas.setWidth(300);
-         */
- /*ScrollBar vScroll = createScrollBar(Orientation.VERTICAL, 10000, 300);
-
+        canvas.setWidth(300);
+        ScrollBar vScroll = createScrollBar(Orientation.VERTICAL, 10000, 300);
         ScrollBar hScroll = createScrollBar(Orientation.HORIZONTAL, 10000, 300);
-
         GridPane scrollPane = new GridPane();
         scrollPane.addColumn(0, canvas, hScroll);
         scrollPane.add(vScroll, 1, 0);*/
-
         Color backgroundColour = Color.WHITE;
         Color pipeColour = Color.BLUE;
-
-        GraphicsContext ctx = canvas.getGraphicsContext2D();
 
         ctx.setStroke(Color.BLACK);
         ctx.setLineWidth(2);
 
-        drawBorders(ctx);
-        List<Block> pipeABlock = new ArrayList<Block>();
-        pipeABlock.add(new Block(0, 30, 100, 40, 30, 0, 40, 100, 0, 30, 100, 40, 30, 0, 40, 100));
-        Pipe pipeA = new Pipe(pipeABlock);
+        Grid grid = new Grid(numColumns, numRows);
+        System.out.println("grid num columns "+ grid.numColumns);
+        System.out.println("grid num rows " + grid.numRows);
+        grid.draw(ctx);
+        grid.drawBorders(ctx);
+        grid.drawBoxes(ctx);
 
-        List<Block> pipeBBlock = new ArrayList<Block>();
-        pipeBBlock.add(new Block(30, 0, 40, 70, 30, 30, 70, 40, 30, 30, 40, 70, 0, 30, 70, 40));
-        pipeBBlock.add(new Block(30, 30, 70, 40, 30, 30, 40, 70, 0, 30, 70, 40, 30, 0, 40, 70));
-        Pipe pipeB = new Pipe(pipeBBlock);
-       // pipeA.draw(ctx, pipeColour);
-        //pipeB.draw(ctx, pipeColour);
-
-        /*Pipe pipe3 = new Pipe(30, 0, 40, 70, 30, 30, 70, 40);
-        System.out.println("PIPE3 block1");
-        pipe3.blocks.get(0).orientation.printVals();
-        System.out.println("PIPE3 block2");
-        pipe3.blocks.get(1).orientation.printVals();
-         */
         //Creating the mouse event handler 
         EventHandler<javafx.scene.input.MouseEvent> eventHandler
                 = new EventHandler<MouseEvent>() {
@@ -93,10 +82,10 @@ canvas.setWidth(300);
                 //System.out.println("Mouse event handler v3 (create then add created handler)");
                 System.out.println("getSceneX " + mouseEvent.getSceneX());
                 System.out.println("getSceneY " + mouseEvent.getSceneY());
-                tester(mouseEvent.getSceneX(), mouseEvent.getSceneY(), pipeA, pipeB, ctx);
-                //pass grid here
+                checkRotation(mouseEvent.getSceneX(), mouseEvent.getSceneY(), grid.grid, ctx);
             }
         };
+
         //Adding the event handler 
         canvas.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
@@ -104,38 +93,18 @@ canvas.setWidth(300);
         //canvas.removeEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
         root.getChildren().addAll(canvas);
         theStage.show();
-
     }
 
-    public void drawBorders(GraphicsContext ctx) {
-        ctx.setFill(Color.BLACK);
-        double height = ctx.getCanvas().getHeight();
-        double width = ctx.getCanvas().getWidth();
-        int numRows = (int) height / 100;
-        int numColumns = (int) width / 100;
-        System.out.println("num Columns = " + numColumns);
-        System.out.println("numRows " + numRows);
-        Grid grid = new Grid(numColumns, numRows);
-        //grid.draw(ctx);
-        System.out.println(grid);
-        for (int i = 0; i < numColumns; i += (numColumns - 1)) {
-            for (int j = 0; j < numRows; j++) {
-                ctx.fillRect((i * 100), (j * 100), 100, 100);
+    public void checkRotation(double x, double y, List<List<Pipe>> pipeGrid, GraphicsContext ctx) {
+        for (List<Pipe> pipeList : pipeGrid) {
+            for (Pipe pipe : pipeList) {
+                if ((x >= pipe.leftEdge) && (x <= pipe.rightEdge)) {
+
+                    System.out.println("left, right " + pipe.leftEdge + " " + pipe.rightEdge);
+                    System.out.println("you are in pipes x range");
+                    pipe.rotate(ctx, 1);
+                }
             }
-        }
-    }
-
-    public void tester(double x, double y, Pipe pipe, Pipe pipe3, GraphicsContext ctx) {
-        System.out.println("left, right " + pipe.leftEdge + " " + pipe.rightEdge);
-
-        if ((x >= pipe.leftEdge) && (x <= pipe.rightEdge)) {
-            System.out.println("you are in pipeA x range");
-            pipe.rotate(ctx, 1);
-        }
-
-        if ((x >= pipe3.leftEdge) && (x <= pipe3.rightEdge)) {
-            System.out.println("you are in pipeB x range");
-            pipe3.rotate(ctx, 1);
         }
     }
 
@@ -145,6 +114,35 @@ canvas.setWidth(300);
         sb.setMax(fullSize - canvasSize);
         sb.setVisibleAmount(canvasSize);
         return sb;
+    }
+
+    public void pipeDemoDeepCopy() {
+        List<Block> pipeABlock = new ArrayList<Block>();
+        pipeABlock.add(new Block(0, 30, 100, 40, 30, 0, 40, 100, 0, 30, 100, 40, 30, 0, 40, 100));
+        Pipe pipeA = new Pipe(pipeABlock);
+
+        List<Block> pipeBBlock = new ArrayList<Block>();
+        pipeBBlock.add(new Block(30, 0, 40, 70, 30, 30, 70, 40, 30, 30, 40, 70, 0, 30, 70, 40));
+        pipeBBlock.add(new Block(30, 30, 70, 40, 30, 30, 40, 70, 0, 30, 70, 40, 30, 0, 40, 70));
+        Pipe pipeB = new Pipe(pipeBBlock);
+
+        System.out.println("pipe A = ");
+        System.out.println(pipeA);
+        Pipe pipeaclone = pipeA.deepClone();
+        System.out.println("pipeA clone" + pipeaclone);
+        System.out.println("***************************************************");
+        pipeA.bottomEdge = 9999;
+        System.out.println("pipeA = " + pipeA);
+
+        System.out.println("pipeA clone" + pipeaclone);
+
+        pipeaclone.blocks.get(0).orientation.changePositions(3, 3);
+
+        pipeaclone.updatesEdges();
+        pipeaclone.blocks.get(0).update();
+        System.out.println("pipeAclone at 3 3");
+        System.out.println(pipeaclone);
+
     }
 
 }

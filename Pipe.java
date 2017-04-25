@@ -4,6 +4,11 @@ package waterdrop;
  *
  * @author humzah
  */
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.canvas.Canvas;
@@ -11,7 +16,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import waterdrop.Block;
 
-public class Pipe {
+import java.io.Serializable;
+
+public class Pipe implements Cloneable, Serializable {
 
     int leftEdge;
     int rightEdge;
@@ -111,11 +118,6 @@ public class Pipe {
         this.rightEdge = main[0] + main[2];
         this.topEdge = main[1];
         this.bottomEdge = main[1] + main[3];
-        /*System.out.println("before edges = (l r t b)");
-        System.out.println(this.leftEdge);
-        System.out.println(this.rightEdge);
-        System.out.println(this.topEdge);
-        System.out.println(this.bottomEdge);*/
         for (Block block : this.blocks) {
             int[] next = block.orientation.currentOrientation;
 
@@ -142,16 +144,8 @@ public class Pipe {
             } else {
                 this.bottomEdge = main[1] + main[3];
             }
-
+            block.update();
         }
-
-       /* System.out.println("AFTER edges = (l r t b)");
-        System.out.println(this.leftEdge);
-        System.out.println(this.rightEdge);
-        System.out.println(this.topEdge);
-        System.out.println(this.bottomEdge);
-        System.out.println("--------------------------------------------------");*/
-
     }
 
     public void rotate(GraphicsContext ctx, int direction) {
@@ -183,6 +177,30 @@ public class Pipe {
             this.updatesEdges();
             //draw new shape
             this.draw(ctx, Color.BLUE);
+        }
+    }
+
+    public Pipe clone() {
+        try {
+            return (Pipe) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
+    }
+
+    public Pipe deepClone() {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(this);
+
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            return (Pipe) ois.readObject();
+        } catch (IOException e) {
+            return null;
+        } catch (ClassNotFoundException e) {
+            return null;
         }
     }
 
