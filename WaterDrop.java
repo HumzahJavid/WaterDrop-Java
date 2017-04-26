@@ -36,7 +36,6 @@ public class WaterDrop extends Application {
 
     public static void main(String[] args) {
         launch(args);
-
     }
 
     @Override
@@ -54,13 +53,6 @@ public class WaterDrop extends Application {
 
         int numRows = (int) height / 100;
         int numColumns = (int) width / 100;
-        /*canvas.setHeight(300);
-        canvas.setWidth(300);
-        ScrollBar vScroll = createScrollBar(Orientation.VERTICAL, 10000, 300);
-        ScrollBar hScroll = createScrollBar(Orientation.HORIZONTAL, 10000, 300);
-        GridPane scrollPane = new GridPane();
-        scrollPane.addColumn(0, canvas, hScroll);
-        scrollPane.add(vScroll, 1, 0);*/
         Color backgroundColour = Color.WHITE;
         Color pipeColour = Color.BLUE;
 
@@ -68,10 +60,8 @@ public class WaterDrop extends Application {
         ctx.setLineWidth(2);
 
         Grid grid = new Grid(numColumns, numRows);
-        System.out.println("grid num columns "+ grid.numColumns);
-        System.out.println("grid num rows " + grid.numRows);
-        grid.draw(ctx);
         grid.drawBorders(ctx);
+        grid.draw(ctx);
         grid.drawBoxes(ctx);
 
         //Creating the mouse event handler 
@@ -96,12 +86,13 @@ public class WaterDrop extends Application {
     }
 
     public void checkRotation(double x, double y, List<List<Pipe>> pipeGrid, GraphicsContext ctx) {
+        //loops through grid to find and rotate the pipe that was clicked
         for (List<Pipe> pipeList : pipeGrid) {
             for (Pipe pipe : pipeList) {
-                if ((x >= pipe.leftEdge) && (x <= pipe.rightEdge)) {
-
-                    System.out.println("left, right " + pipe.leftEdge + " " + pipe.rightEdge);
-                    System.out.println("you are in pipes x range");
+                if (pipe == null) {
+                    //used to ignore any grid spaces which do not have pipe assigned
+                } else if (((x >= pipe.leftEdge) && (x <= pipe.rightEdge)) && ((y >= pipe.topEdge) && (y <= pipe.bottomEdge))) {
+                    System.out.println("(x,y) = (" + pipeGrid.indexOf(pipeList) + "," + pipeList.indexOf(pipe) + ")");
                     pipe.rotate(ctx, 1);
                 }
             }
@@ -119,12 +110,12 @@ public class WaterDrop extends Application {
     public void pipeDemoDeepCopy() {
         List<Block> pipeABlock = new ArrayList<Block>();
         pipeABlock.add(new Block(0, 30, 100, 40, 30, 0, 40, 100, 0, 30, 100, 40, 30, 0, 40, 100));
-        Pipe pipeA = new Pipe(pipeABlock);
+        Pipe pipeA = new Pipe(pipeABlock, Color.GREEN);
 
         List<Block> pipeBBlock = new ArrayList<Block>();
         pipeBBlock.add(new Block(30, 0, 40, 70, 30, 30, 70, 40, 30, 30, 40, 70, 0, 30, 70, 40));
         pipeBBlock.add(new Block(30, 30, 70, 40, 30, 30, 40, 70, 0, 30, 70, 40, 30, 0, 40, 70));
-        Pipe pipeB = new Pipe(pipeBBlock);
+        Pipe pipeB = new Pipe(pipeBBlock, Color.PINK);
 
         System.out.println("pipe A = ");
         System.out.println(pipeA);

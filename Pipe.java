@@ -26,71 +26,19 @@ public class Pipe implements Cloneable, Serializable {
     int bottomEdge;
     List<Block> blocks;
     int orientation;
+    Color colour1;
 
-    /*Pipe(int x, int y, int w, int h) {
-        this.blocks = new ArrayList<Block>();
-        Block block = new Block(x, y, w, h);
-        this.blocks.add(block);
-
-        this.leftEdge = x;
-        this.rightEdge = (x + w);
-        this.topEdge = y;
-        this.bottomEdge = (y + h);
-        this.orientation = 1;
-    }
-
-    Pipe(int x, int y, int w, int h, int x2, int y2, int w2, int h2) {
-        this.blocks = new ArrayList<Block>();
-        Block block = new Block(x, y, w, h);
-        Block block2 = new Block(x2, y2, w2, h2);
-        this.blocks.add(block);
-        this.blocks.add(block2);
-
-        if (x < x2) {
-            this.leftEdge = x;
-        } else {
-            this.leftEdge = x2;
-        }
-
-        if ((x + w) > (x + w2)) {
-            this.rightEdge = (x + w);
-        } else {
-            this.rightEdge = (x2 + w2);
-        }
-
-        if (y < y2) {
-            this.topEdge = y;
-        } else {
-            this.topEdge = y2;
-        }
-
-        if ((y + h) > (y2 + h2)) {
-            this.bottomEdge = (y + h);
-        } else {
-            this.bottomEdge = (y + h2);
-        }
-
-        this.orientation = 1;
-    }*/
-    Pipe(List<Block> blocks) {
+    Pipe(List<Block> blocks, Color colour) {
         this.blocks = blocks;
         this.updatesEdges();
         this.orientation = 1;
+        this.colour1 = colour;
     }
-
-    Pipe(Block block) {
-        int x = block.x;
-        int y = block.y;
-        int w = block.width;
-        int h = block.height;
-        this.blocks = new ArrayList<Block>();
-        blocks.add(block);
-
-        this.leftEdge = x;
-        this.rightEdge = (x + w);
-        this.topEdge = y;
-        this.bottomEdge = (y + h);
-
+    //change order of blocks and colour
+        Pipe(List<Block> blocks) {
+        this.blocks = blocks;
+        this.updatesEdges();
+        this.orientation = 1;
     }
 
     public List<Block> getBlocks() {
@@ -103,6 +51,13 @@ public class Pipe implements Cloneable, Serializable {
 
     public void addBlock(Block block) {
         this.blocks.add(block);
+    }
+
+    public void draw(GraphicsContext ctx) {
+        ctx.setFill(this.colour1);
+        for (Block block : this.getBlocks()) {
+            block.draw(ctx);
+        }
     }
 
     public void draw(GraphicsContext ctx, Color colour) {
@@ -207,11 +162,13 @@ public class Pipe implements Cloneable, Serializable {
     @Override
     public String toString() {
         String pipeString = "";
-        for (Block block : this.blocks) {
+        /*        for (Block block : this.blocks) {
             pipeString += block.toString() + "\n....pipe orientation : " + this.orientation + " l, r, t, b " + this.leftEdge + " " + this.rightEdge + " " + this.topEdge + " " + this.bottomEdge;
             pipeString += "\n";
-        }
+        }*/
+        //System.out.println(this.leftEdge + " " + this.rightEdge + " " + this.topEdge + " " + this.bottomEdge);
         String pipeString2 = "[]";
+        pipeString+= (this.blocks.toString());
 
         return pipeString;
     }
