@@ -4,13 +4,14 @@ package waterdrop;
  *
  * @author humzah
  */
+import javafx.scene.canvas.GraphicsContext;
+//old cloning library imports requirements
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import javafx.scene.canvas.GraphicsContext;
 
 public class Block implements Cloneable, Serializable {
 
@@ -19,10 +20,6 @@ public class Block implements Cloneable, Serializable {
     int width;
     int height;
     Orientation orientation;
-
-    Block() {
-
-    }
 
     Block(int x, int y, int w, int h, int x2, int y2, int w2, int h2, int x3, int y3, int w3, int h3, int x4, int y4, int w4, int h4) {
         this.x = x;

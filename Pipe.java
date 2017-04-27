@@ -4,19 +4,21 @@ package waterdrop;
  *
  * @author humzah
  */
+import java.util.List;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+//old cloning imports requirements
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import waterdrop.Block;
-
 import java.io.Serializable;
+//new cloning library (used to make deep copies of pipes)
+//https://github.com/kostaskougios/cloning
+import com.rits.cloning.*;
+import javafx.scene.paint.Paint;
+
 
 public class Pipe implements Cloneable, Serializable {
 
@@ -26,16 +28,17 @@ public class Pipe implements Cloneable, Serializable {
     int bottomEdge;
     List<Block> blocks;
     int orientation;
-    Color colour1;
+    Color colour;
 
     Pipe(List<Block> blocks, Color colour) {
         this.blocks = blocks;
         this.updatesEdges();
         this.orientation = 1;
-        this.colour1 = colour;
+        this.colour = colour;
     }
+
     //change order of blocks and colour
-        Pipe(List<Block> blocks) {
+    Pipe(List<Block> blocks) {
         this.blocks = blocks;
         this.updatesEdges();
         this.orientation = 1;
@@ -54,7 +57,7 @@ public class Pipe implements Cloneable, Serializable {
     }
 
     public void draw(GraphicsContext ctx) {
-        ctx.setFill(this.colour1);
+        ctx.setFill(this.colour);
         for (Block block : this.getBlocks()) {
             block.draw(ctx);
         }
@@ -131,7 +134,7 @@ public class Pipe implements Cloneable, Serializable {
             }
             this.updatesEdges();
             //draw new shape
-            this.draw(ctx, Color.BLUE);
+            this.draw(ctx);
         }
     }
 
@@ -162,13 +165,8 @@ public class Pipe implements Cloneable, Serializable {
     @Override
     public String toString() {
         String pipeString = "";
-        /*        for (Block block : this.blocks) {
-            pipeString += block.toString() + "\n....pipe orientation : " + this.orientation + " l, r, t, b " + this.leftEdge + " " + this.rightEdge + " " + this.topEdge + " " + this.bottomEdge;
-            pipeString += "\n";
-        }*/
-        //System.out.println(this.leftEdge + " " + this.rightEdge + " " + this.topEdge + " " + this.bottomEdge);
+        pipeString += (this.blocks.toString());
         String pipeString2 = "[]";
-        pipeString+= (this.blocks.toString());
 
         return pipeString;
     }

@@ -5,7 +5,7 @@ package waterdrop;
  * @author humzah
  */
 import java.util.ArrayList;
-import org.apache.commons.lang3.*;
+//old cloning library imports requirements
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -22,8 +22,6 @@ public class Orientation implements Cloneable, Serializable {
     public int[] currentOrientation;
 
     public Orientation(int[] val) {
-        //0 30 100 40
-        //30 0 40 100
         this.ONE = (new int[]{val[0], val[1], val[2], val[3]});
         this.TWO = (new int[]{val[4], val[5], val[6], val[7]});
         this.THREE = (new int[]{val[8], val[9], val[10], val[11]});
@@ -52,13 +50,6 @@ public class Orientation implements Cloneable, Serializable {
         orient.add(TWO);
         orient.add(THREE);
         orient.add(FOUR);
-
-        for (int[] vals : orient) {
-            for (int val : vals) {
-                System.out.print(val + " ,");
-            }
-            System.out.println("\n");
-        }
     }
 
     public Orientation clone() {
@@ -107,8 +98,6 @@ public class Orientation implements Cloneable, Serializable {
 
     public void changePosition(int[] orientation, int xDiff, int yDiff) {
         //updates position for a given orientation
-        //System.out.println("xdiff = " + xDiff);
-        //System.out.println("ydiff = " + yDiff);
         orientation[0] += xDiff;
         orientation[1] += yDiff;
     }

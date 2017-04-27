@@ -4,32 +4,24 @@ package waterdrop;
  *
  * @author humzah
  */
-import java.util.ArrayList;
 import java.util.List;
+//javafx standard imports?
 import javafx.application.Application;
 import static javafx.application.Application.launch;
-import javafx.event.EventHandler;
-import javafx.geometry.Orientation;
-
 import javafx.stage.Stage;
-
 import javafx.scene.Scene;
-
 import javafx.scene.Group;
-
+//canvas 
 import javafx.scene.canvas.Canvas;
-
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ScrollBar;
+//event handling
+import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-
+//colour of pipe
 import javafx.scene.paint.Color;
-
+//will be used in fonts when displaying level and score
 import javafx.scene.text.Font;
-
 import javafx.scene.text.FontWeight;
-
 import javafx.scene.text.FontPosture;
 
 public class WaterDrop extends Application {
@@ -53,8 +45,6 @@ public class WaterDrop extends Application {
 
         int numRows = (int) height / 100;
         int numColumns = (int) width / 100;
-        Color backgroundColour = Color.WHITE;
-        Color pipeColour = Color.BLUE;
 
         ctx.setStroke(Color.BLACK);
         ctx.setLineWidth(2);
@@ -69,9 +59,6 @@ public class WaterDrop extends Application {
                 = new EventHandler<MouseEvent>() {
             @Override
             public void handle(javafx.scene.input.MouseEvent mouseEvent) {
-                //System.out.println("Mouse event handler v3 (create then add created handler)");
-                System.out.println("getSceneX " + mouseEvent.getSceneX());
-                System.out.println("getSceneY " + mouseEvent.getSceneY());
                 checkRotation(mouseEvent.getSceneX(), mouseEvent.getSceneY(), grid.grid, ctx);
             }
         };
@@ -92,48 +79,10 @@ public class WaterDrop extends Application {
                 if (pipe == null) {
                     //used to ignore any grid spaces which do not have pipe assigned
                 } else if (((x >= pipe.leftEdge) && (x <= pipe.rightEdge)) && ((y >= pipe.topEdge) && (y <= pipe.bottomEdge))) {
-                    System.out.println("(x,y) = (" + pipeGrid.indexOf(pipeList) + "," + pipeList.indexOf(pipe) + ")");
+                    //System.out.println("(x,y) = (" + pipeGrid.indexOf(pipeList) + "," + pipeList.indexOf(pipe) + ")");
                     pipe.rotate(ctx, 1);
                 }
             }
         }
     }
-
-    public static ScrollBar createScrollBar(Orientation orientation, double fullSize, double canvasSize) {
-        ScrollBar sb = new ScrollBar();
-        sb.setOrientation(orientation);
-        sb.setMax(fullSize - canvasSize);
-        sb.setVisibleAmount(canvasSize);
-        return sb;
-    }
-
-    public void pipeDemoDeepCopy() {
-        List<Block> pipeABlock = new ArrayList<Block>();
-        pipeABlock.add(new Block(0, 30, 100, 40, 30, 0, 40, 100, 0, 30, 100, 40, 30, 0, 40, 100));
-        Pipe pipeA = new Pipe(pipeABlock, Color.GREEN);
-
-        List<Block> pipeBBlock = new ArrayList<Block>();
-        pipeBBlock.add(new Block(30, 0, 40, 70, 30, 30, 70, 40, 30, 30, 40, 70, 0, 30, 70, 40));
-        pipeBBlock.add(new Block(30, 30, 70, 40, 30, 30, 40, 70, 0, 30, 70, 40, 30, 0, 40, 70));
-        Pipe pipeB = new Pipe(pipeBBlock, Color.PINK);
-
-        System.out.println("pipe A = ");
-        System.out.println(pipeA);
-        Pipe pipeaclone = pipeA.deepClone();
-        System.out.println("pipeA clone" + pipeaclone);
-        System.out.println("***************************************************");
-        pipeA.bottomEdge = 9999;
-        System.out.println("pipeA = " + pipeA);
-
-        System.out.println("pipeA clone" + pipeaclone);
-
-        pipeaclone.blocks.get(0).orientation.changePositions(3, 3);
-
-        pipeaclone.updatesEdges();
-        pipeaclone.blocks.get(0).update();
-        System.out.println("pipeAclone at 3 3");
-        System.out.println(pipeaclone);
-
-    }
-
 }

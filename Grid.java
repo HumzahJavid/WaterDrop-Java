@@ -8,19 +8,17 @@ import java.util.List;
 import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import org.apache.commons.lang3.SerializationUtils;
+//old cloning library imports requirements
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+//new cloning library (used to make deep copies of pipes)
+//https://github.com/kostaskougios/cloning
+import com.rits.cloning.*;
 
-//external lib
-//http://stackoverflow.com/questions/17402009/importing-library-in-java
-//look into deep clone of pipeA
-//http://stackoverflow.com/questions/869033/how-do-i-copy-an-object-in-java
-//http://stackoverflow.com/questions/9264066/beanutils-clonebean-deep-copy
 @SuppressWarnings("serial")
 public class Grid implements Cloneable, Serializable {
 
@@ -31,19 +29,20 @@ public class Grid implements Cloneable, Serializable {
     Pipe pipeA;
     Pipe pipeB;
     Pipe pipeC;
+    Pipe pipeStart;
+    Pipe pipeEnd;
+    int randomStart;
+    int randomEnd;
 
     Grid(int numColumns, int numRows) {
-        for (int i = 0; i < 10; i++) {
-            System.out.println(this.getRandomNumber(3));
-            System.out.println("\n");
-        }
         this.numColumns = numColumns;
         this.numRows = numRows;
+        //used to clone pipes
+        Cloner cloner = new Cloner();
         //creates the blueprint of the playable pipe pieces (each with 4 orientations)
         this.setupDefaultPipes();
-        System.out.println("ABC" + this.pipeA + " " + this.pipeB + " " + this.pipeC);
-        List<List<Pipe>> grid2 = new ArrayList<List<Pipe>>(numColumns);
 
+        List<List<Pipe>> grid2 = new ArrayList<List<Pipe>>(numColumns);
         //creates the spaces for the pipes
         for (int i = 0; i < 13; i++) { //< 14 (pos of right border)
             grid2.add(new ArrayList<Pipe>(numRows));
@@ -56,45 +55,41 @@ public class Grid implements Cloneable, Serializable {
                 int randomNum = this.getRandomNumber(3);
                 switch (randomNum) {
                     case 1: {
-                        grid2.get(i).add(pipeA.deepClone());
+                        grid2.get(i).add(cloner.deepClone(this.pipeA));
                     }
                     break;
                     case 2: {
-                        grid2.get(i).add(pipeB.deepClone());
+                        grid2.get(i).add(cloner.deepClone(this.pipeB));
                     }
                     break;
 
                     case 3: {
-                        grid2.get(i).add(pipeC.deepClone());
+                        grid2.get(i).add(cloner.deepClone(this.pipeC));
                     }
                     break;
 
                     default: {
-
-                        grid2.get(i).add(pipeA.deepClone());
+                        grid2.get(i).add(cloner.deepClone(this.pipeA));
                     }
                 }
             }
         }
-        for (int i = 1; i < 13; i++) {
-            for (int j = 0; j < (numRows - 1); j++) {
-                System.out.println(grid2.get(i).get(j));
-            }
-        }
+
         //sets all the squares(pipes) in the top row to null (due to shortcomings of arrayList)
         for (int i = 1; i < 13; i++) {
             grid2.get(i).set(0, null);
         }
 
-        //if i use pipe constructor Pipe(List<Block> blocks, Color colour) in setting up default pipes, this pipe(1,1) and all other pipes become null ? 
-        System.out.println("in grid2 1  1" + grid2.get(1).get(1)); //ERROR HERE 
+        this.randomStart = getRandomNumber(numColumns - 2);
+        this.randomEnd = getRandomNumber(numColumns - 2);
+        grid2.get(this.randomStart).set(0, this.pipeStart);
+        //add another pipe to randomEndX
 
+        grid2.get(this.randomEnd).add(this.pipeEnd);
         this.grid = grid2;
-        System.out.println(this.grid.get(1).get(1));
-
         //moves each generated pipe to the correct grid square (using its grid reference)
         this.updatePipePosition();
-
+        this.updateStartEndPipePosition();
     }
 
     private int getRandomNumber(int max) {
@@ -103,13 +98,14 @@ public class Grid implements Cloneable, Serializable {
     }
 
     public void setupDefaultPipes() {
+        Cloner cloner = new Cloner();
         //set up the default pipes (each with their respective blocks)
         List<Block> pipeABlock = new ArrayList<Block>() {
             {
                 this.add(new Block(0, 30, 100, 40, 30, 0, 40, 100, 0, 30, 100, 40, 30, 0, 40, 100));
             }
         };
-        this.pipeA = new Pipe(pipeABlock);//, Color.web("#54fb37");
+        this.pipeA = new Pipe(pipeABlock, Color.web("#54F3B7"));
 
         List<Block> pipeBBlocks = new ArrayList<Block>() {
             {
@@ -117,7 +113,7 @@ public class Grid implements Cloneable, Serializable {
                 this.add(new Block(30, 30, 70, 40, 30, 30, 40, 70, 0, 30, 70, 40, 30, 0, 40, 70));
             }
         };
-        this.pipeB = new Pipe(pipeBBlocks);//, Color.PINK);
+        this.pipeB = new Pipe(pipeBBlocks, Color.web("#FFC0CB"));
 
         List<Block> pipeCBlocks = new ArrayList<Block>() {
             {
@@ -125,13 +121,21 @@ public class Grid implements Cloneable, Serializable {
                 this.add(new Block(0, 30, 100, 40, 30, 0, 40, 100, 0, 30, 100, 40, 30, 0, 40, 100));
             }
         };
-        this.pipeC = new Pipe(pipeCBlocks);//, Color.ORANGE);
+        this.pipeC = new Pipe(pipeCBlocks, Color.BISQUE);//#F3F354
+        //water colour #54E7F2
+
+        List<Block> pipeStartEndBlocks = new ArrayList<Block>() {
+            {
+                this.add(new Block(30, 0, 40, 100, 30, 0, 40, 100, 30, 0, 40, 100, 30, 0, 40, 100));
+            }
+        };
+        this.pipeStart = new Pipe(cloner.deepClone(pipeStartEndBlocks), Color.RED);
+        this.pipeEnd = new Pipe(cloner.deepClone(pipeStartEndBlocks), Color.BLUE);
     }
 
     private void updatePipePosition() {
         for (int i = 1; i < this.numColumns - 1; i++) {
             for (int j = 1; j < this.numRows - 1; j++) {
-                System.out.println("i j " + i + " , " + j);
                 Pipe pipe = this.grid.get(i).get(j);
                 List<Block> blocks = pipe.blocks;
                 for (Block block : blocks) {
@@ -144,13 +148,39 @@ public class Grid implements Cloneable, Serializable {
         }
     }
 
+    private void updateStartEndPipePosition() {
+        Pipe startPipe = this.grid.get(this.randomStart).get(0);
+        List<Block> blocks = startPipe.blocks;
+        for (Block block : blocks) {
+            //for each blocks orientation update the value of ONE TWO THREE FOUR
+            block.orientation.changePositions(this.randomStart, 0);
+            block.update();
+        }
+        startPipe.updatesEdges();
+
+        Pipe endPipe = this.grid.get(this.randomEnd).get(this.numRows - 1);
+        List<Block> blocks2 = endPipe.blocks;
+        for (Block block : blocks2) {
+            //for each blocks orientation update the value of ONE TWO THREE FOUR
+            block.orientation.changePositions(this.randomEnd, (this.numRows - 1));
+            block.update();
+        }
+        endPipe.updatesEdges();
+    }
+
     public void draw(GraphicsContext ctx) {
+        //draw most of the pipes in the grid
         for (int i = 1; i < this.grid.size(); i++) {
             for (int j = 1; j < this.grid.get(1).size(); j++) {
                 Pipe pipe = this.grid.get(i).get(j);
-                pipe.draw(ctx, Color.PINK);
+                pipe.draw(ctx);
             }
         }
+        //draw start and end pipes
+        Pipe startPipe = this.grid.get(this.randomStart).get(0);
+        startPipe.draw(ctx);
+        Pipe endPipe = this.grid.get(this.randomEnd).get(this.numRows - 1);
+        endPipe.draw(ctx);
     }
 
     public void drawBorders(GraphicsContext ctx) {
@@ -166,11 +196,11 @@ public class Grid implements Cloneable, Serializable {
         ctx.setFill(Color.BURLYWOOD);
         double width = ctx.getCanvas().getWidth();
         double height = ctx.getCanvas().getHeight();
-        for (int i = 0; i < ctx.getCanvas().getWidth(); i += 100) {
-            ctx.fillRect(i, 0, 1, ctx.getCanvas().getHeight());
+        for (int i = 0; i < width; i += 100) {
+            ctx.fillRect(i, 0, 1, height);
         }
-        for (int j = 0; j < ctx.getCanvas().getHeight(); j += 100) {
-            ctx.fillRect(0, j, ctx.getCanvas().getWidth(), 1);
+        for (int j = 0; j < height; j += 100) {
+            ctx.fillRect(0, j, width, 1);
         }
     }
 
