@@ -19,7 +19,6 @@ import java.io.Serializable;
 import com.rits.cloning.*;
 import javafx.scene.paint.Paint;
 
-
 public class Pipe implements Cloneable, Serializable {
 
     int leftEdge;
@@ -29,12 +28,20 @@ public class Pipe implements Cloneable, Serializable {
     List<Block> blocks;
     int orientation;
     Color colour;
+    boolean leftConnected;
+    boolean rightConnected;
+    boolean topConnected;
+    boolean bottomConnected;
 
     Pipe(List<Block> blocks, Color colour) {
         this.blocks = blocks;
         this.updatesEdges();
         this.orientation = 1;
         this.colour = colour;
+        this.leftConnected = false;
+        this.rightConnected = false;
+        this.topConnected = false;
+        this.bottomConnected = false;
     }
 
     //change order of blocks and colour
@@ -135,6 +142,114 @@ public class Pipe implements Cloneable, Serializable {
             this.updatesEdges();
             //draw new shape
             this.draw(ctx);
+        }
+    }
+
+    public void checkConnections(Grid grid, SinglyList list) {
+        //i need to check if things are no longer connected LATER
+        //check if multiple connections are made in this function by keeping a count, 
+        //if it is, we need to clone the list and give it a fork
+        int[] gridRef = grid.getGridReference(this);
+        int x = gridRef[0];
+        int y = gridRef[1];
+
+        //left pipe
+        Pipe leftPipe = grid.grid.get(x - 1).get(y);
+        //right pipe
+        Pipe rightPipe = grid.grid.get(x + 1).get(y);
+        //top pipe
+        Pipe topPipe = grid.grid.get(x).get(y - 1);
+        //bottom pipe
+        Pipe bottomPipe = grid.grid.get(x).get(y + 1);
+
+        if ((this.leftEdge == leftPipe.rightEdge) && (this.leftConnected == false) && (!list.isInList(this))) {
+            this.leftConnected = true;
+        }
+
+        if ((this.rightEdge == rightPipe.leftEdge) && (this.rightConnected == false) && (!list.isInList(this))) {
+            this.rightConnected = true;
+        }
+
+        if ((this.topEdge == topPipe.bottomEdge) && (this.topConnected == false) && (!list.isInList(this))) {
+            this.topConnected = true;
+        }
+
+        if ((this.bottomEdge == bottomPipe.topEdge) && (this.bottomConnected == false) && (!list.isInList(this))) {
+            this.bottomConnected = true;
+        }
+
+        if (this.leftConnected || this.rightConnected || this.topConnected || this.bottomConnected) {
+            System.out.println("list length before" + list.length);
+            list.add(this);
+
+            System.out.println("list length after" + list.length);
+            System.out.println("pipe added = " + this);
+        }
+    }
+
+    public void checkPipeNeedsRemoving(SinglyList list) {
+        boolean isConnected = true;
+        
+        //get the previous pipe check if its no longer connected to it
+        int indexOfPreviousPipe = list.getIndexOf(this) - 1;
+        Pipe previousPipe = list.getNodeAt(indexOfPreviousPipe).data;
+
+        if (this.leftEdge != previousPipe.rightEdge) {
+            this.leftConnected = false;
+        }
+
+        if (this.rightEdge != previousPipe.leftEdge) {
+            this.rightConnected = false;
+        }
+
+        if (this.bottomEdge != previousPipe.topEdge) {
+            this.bottomConnected = false;
+        }
+
+        if (this.topEdge != previousPipe.bottomEdge) {
+            this.topConnected = false;
+        }
+        
+        if (!this.leftConnected && !this.rightConnected && !this.topConnected && !this.bottomConnected) {
+            System.out.println("list length before" + list.length);
+            list.remove(this);
+
+            System.out.println("list length after" + list.length);
+            System.out.println("pipe removed = " + this);
+        }
+    }
+
+    public void checkPipeCanBeAddedToList(Grid grid, SinglyList list) {
+        int[] gridRef = grid.getGridReference(this);
+        int x = gridRef[0];
+        int y = gridRef[1];
+
+        //left pipe
+        System.out.println("list length before = " + list.length);
+        Pipe lastPipe = list.getNodeAt(list.length).data;
+
+        if (this.leftEdge == lastPipe.rightEdge) {
+            this.leftConnected = true;
+        }
+
+        if (this.rightEdge == lastPipe.leftEdge) {
+            this.rightConnected = true;
+        }
+
+        if (this.bottomEdge == lastPipe.topEdge) {
+            this.bottomConnected = true;
+        }
+
+        if (this.topEdge == lastPipe.bottomEdge) {
+            this.topConnected = true;
+        }
+
+        if (this.leftConnected || this.rightConnected || this.topConnected || this.bottomConnected) {
+            System.out.println("list length before" + list.length);
+            list.add(this);
+
+            System.out.println("list length after" + list.length);
+            System.out.println("pipe added = " + this);
         }
     }
 

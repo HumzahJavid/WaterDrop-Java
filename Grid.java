@@ -204,6 +204,21 @@ public class Grid implements Cloneable, Serializable {
         }
     }
 
+    public int[] getGridReference(Pipe pipe) {
+        int[] gridRef = new int[2];
+        for (List<Pipe> pipeList : this.grid) {
+            for (Pipe matchingPipe : pipeList) {
+                if (matchingPipe == null) {
+                    //used to ignore any grid spaces which do not have pipe assigned
+                } else if (matchingPipe == pipe) {
+                    gridRef[0] = this.grid.indexOf(pipeList);
+                    gridRef[1] = pipeList.indexOf(matchingPipe);
+                }
+            }
+        }
+        return gridRef;
+    }
+
     public Grid clone() {
         try {
             return (Grid) super.clone();

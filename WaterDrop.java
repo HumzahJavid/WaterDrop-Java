@@ -53,13 +53,15 @@ public class WaterDrop extends Application {
         grid.drawBorders(ctx);
         grid.draw(ctx);
         grid.drawBoxes(ctx);
+        SinglyList list = new SinglyList();
+        list.add(grid.pipeStart);
 
         //Creating the mouse event handler 
         EventHandler<javafx.scene.input.MouseEvent> eventHandler
                 = new EventHandler<MouseEvent>() {
             @Override
             public void handle(javafx.scene.input.MouseEvent mouseEvent) {
-                checkRotation(mouseEvent.getSceneX(), mouseEvent.getSceneY(), grid.grid, ctx);
+                rotatePipe(mouseEvent.getSceneX(), mouseEvent.getSceneY(), grid, list, ctx);
             }
         };
 
@@ -72,8 +74,11 @@ public class WaterDrop extends Application {
         theStage.show();
     }
 
-    public void checkRotation(double x, double y, List<List<Pipe>> pipeGrid, GraphicsContext ctx) {
+    public void rotatePipe(double x, double y, Grid grid, SinglyList list, GraphicsContext ctx) {
         //loops through grid to find and rotate the pipe that was clicked
+        boolean newConnection;
+        List<List<Pipe>> pipeGrid = grid.grid;
+
         for (List<Pipe> pipeList : pipeGrid) {
             for (Pipe pipe : pipeList) {
                 if (pipe == null) {
@@ -81,6 +86,12 @@ public class WaterDrop extends Application {
                 } else if (((x >= pipe.leftEdge) && (x <= pipe.rightEdge)) && ((y >= pipe.topEdge) && (y <= pipe.bottomEdge))) {
                     //System.out.println("(x,y) = (" + pipeGrid.indexOf(pipeList) + "," + pipeList.indexOf(pipe) + ")");
                     pipe.rotate(ctx, 1);
+                   // int[] ref = grid.getGridReference(pipe);
+                   // pipe.checkConnections(grid, list);
+                    pipe.checkPipeCanBeAddedToList(grid, list);
+                    //check for new connection here 
+                    //newConnection = checkForConnection
+                    //if newConnection list.addPipe
                 }
             }
         }
