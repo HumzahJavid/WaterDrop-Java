@@ -1,5 +1,3 @@
-package waterdrop;
-
 /**
  *
  * @author humzah
@@ -7,19 +5,13 @@ package waterdrop;
 import java.util.List;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-//old cloning imports requirements
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+
 //new cloning library (used to make deep copies of pipes)
 //https://github.com/kostaskougios/cloning
 import com.rits.cloning.*;
 import javafx.scene.paint.Paint;
 
-public class Pipe implements Cloneable, Serializable {
+public class Pipe {
 
     int leftEdge;
     int rightEdge;
@@ -250,30 +242,6 @@ public class Pipe implements Cloneable, Serializable {
 
             System.out.println("list length after" + list.length);
             System.out.println("pipe added = " + this);
-        }
-    }
-
-    public Pipe clone() {
-        try {
-            return (Pipe) super.clone();
-        } catch (CloneNotSupportedException e) {
-            return null;
-        }
-    }
-
-    public Pipe deepClone() {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(this);
-
-            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            return (Pipe) ois.readObject();
-        } catch (IOException e) {
-            return null;
-        } catch (ClassNotFoundException e) {
-            return null;
         }
     }
 

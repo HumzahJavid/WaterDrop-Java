@@ -1,5 +1,3 @@
-package waterdrop;
-
 /**
  *
  * @author humzah
@@ -8,19 +6,13 @@ import java.util.List;
 import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-//old cloning library imports requirements
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+
 //new cloning library (used to make deep copies of pipes)
 //https://github.com/kostaskougios/cloning
 import com.rits.cloning.*;
 
 @SuppressWarnings("serial")
-public class Grid implements Cloneable, Serializable {
+public class Grid {
 
     List<List<Pipe>> grid;
     int numColumns;
@@ -217,30 +209,6 @@ public class Grid implements Cloneable, Serializable {
             }
         }
         return gridRef;
-    }
-
-    public Grid clone() {
-        try {
-            return (Grid) super.clone();
-        } catch (CloneNotSupportedException e) {
-            return null;
-        }
-    }
-
-    public Grid deepClone() {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(this);
-
-            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            return (Grid) ois.readObject();
-        } catch (IOException e) {
-            return null;
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
     }
 
     public String toString() {

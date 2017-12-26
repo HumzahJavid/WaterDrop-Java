@@ -1,19 +1,10 @@
-package waterdrop;
-
 /**
  *
  * @author humzah
  */
 import java.util.ArrayList;
-//old cloning library imports requirements
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
-public class Orientation implements Cloneable, Serializable {
+public class Orientation {
 
     public int[] ONE;
     public int[] TWO;
@@ -51,31 +42,7 @@ public class Orientation implements Cloneable, Serializable {
         orient.add(THREE);
         orient.add(FOUR);
     }
-
-    public Orientation clone() {
-        try {
-            return (Orientation) super.clone();
-        } catch (CloneNotSupportedException e) {
-            return null;
-        }
-    }
-
-    public Orientation deepClone() {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(this);
-
-            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            return (Orientation) ois.readObject();
-        } catch (IOException e) {
-            return null;
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
-    }
-
+    
     public String toString() {
         String string = "";
         for (int val : this.currentOrientation) {

@@ -1,19 +1,10 @@
-package waterdrop;
-
 /**
  *
  * @author humzah
  */
 import javafx.scene.canvas.GraphicsContext;
-//old cloning library imports requirements
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
-public class Block implements Cloneable, Serializable {
+public class Block {
 
     int x;
     int y;
@@ -77,31 +68,7 @@ public class Block implements Cloneable, Serializable {
         this.width = this.orientation.currentOrientation[2];
         this.height = this.orientation.currentOrientation[3];
     }
-
-    public Block clone() {
-        try {
-            return (Block) super.clone();
-        } catch (CloneNotSupportedException e) {
-            return null;
-        }
-    }
-
-    public Block deepClone() {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(this);
-
-            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            return (Block) ois.readObject();
-        } catch (IOException e) {
-            return null;
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
-    }
-
+    
     @Override
     public String toString() {
         return "X : " + this.x + " Y: " + this.y + " Width: " + this.width + " Height" + this.height + " orientation" + this.orientation;
