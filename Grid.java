@@ -36,7 +36,7 @@ public class Grid {
 
         List<List<Pipe>> grid2 = new ArrayList<List<Pipe>>(numColumns);
         //creates the spaces for the pipes
-        for (int i = 0; i < 13; i++) { //< 14 (pos of right border)
+        for (int i = 0; i < numColumns; i++) { //< 14 (pos of right border)
             grid2.add(new ArrayList<Pipe>(numRows));
         }
 
@@ -66,18 +66,12 @@ public class Grid {
                 }
             }
         }
-
-        //sets all the squares(pipes) in the top row to null (due to shortcomings of arrayList)
-        for (int i = 1; i < 13; i++) {
-            grid2.get(i).set(0, null);
-        }
-
+		
+		grid2 = this.applyNullBorder(grid2);
         this.randomStart = getRandomNumber(numColumns - 2);
         this.randomEnd = getRandomNumber(numColumns - 2);
         grid2.get(this.randomStart).set(0, this.pipeStart);
-        //add another pipe to randomEndX
-
-        grid2.get(this.randomEnd).add(this.pipeEnd);
+        grid2.get(this.randomEnd).set(this.numRows - 1, this.pipeEnd);
         this.grid = grid2;
         //moves each generated pipe to the correct grid square (using its grid reference)
         this.updatePipePosition();
@@ -162,9 +156,9 @@ public class Grid {
 
     public void draw(GraphicsContext ctx) {
         //draw most of the pipes in the grid
-        for (int i = 1; i < this.grid.size(); i++) {
-            for (int j = 1; j < this.grid.get(1).size(); j++) {
-                Pipe pipe = this.grid.get(i).get(j);
+		for (int j = 1; j < numRows - 1; j++) {
+			for (int i = 1; i < numColumns - 1; i++) {
+				Pipe pipe = this.grid.get(i).get(j);
                 pipe.draw(ctx);
             }
         }
@@ -174,7 +168,30 @@ public class Grid {
         Pipe endPipe = this.grid.get(this.randomEnd).get(this.numRows - 1);
         endPipe.draw(ctx);
     }
-
+	
+	public List<List<Pipe>> applyNullBorder(List<List<Pipe>> grid){
+		//left column
+		for (int i = 0; i < numRows; i++){
+			grid.get(0).add(null);
+		}
+		
+		//right column
+		for (int i = 0; i < numRows; i++){
+			grid.get(numColumns - 1).add(null);
+		}
+		
+		//sets all the squares(pipes) in the top row to null
+        for (int i = 0; i < numColumns - 1; i++) {
+            grid.get(i).set(0, null);
+        }
+		
+		//bottom row
+        for (int i = 0; i < numColumns - 1; i++) {
+            grid.get(i).add(null);
+        }
+		return grid;
+	}
+	
     public void drawBorders(GraphicsContext ctx) {
         ctx.setFill(Color.BLACK);
         for (int i = 0; i < this.numColumns; i += (this.numColumns - 1)) {
@@ -222,4 +239,12 @@ public class Grid {
 
         return string;
     }
+	
+	public void printer(){
+		System.out.println("state of grid");
+		for (int i = 0; i < 14; i++){
+			System.out.println("i = " + i);
+			System.out.println(this.grid.get(i));//.set(i, null);
+		}
+	}
 }
