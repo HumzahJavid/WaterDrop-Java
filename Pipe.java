@@ -75,10 +75,10 @@ public class Pipe {
         this.rightEdge = main[0] + main[2];
         this.topEdge = main[1];
         this.bottomEdge = main[1] + main[3];
+
         for (Block block : this.blocks) {
             int[] next = block.orientation.currentOrientation;
-
-            if (next[0] < this.leftEdge) {
+			if (next[0] < this.leftEdge) {
                 this.leftEdge = next[0];
             } else {
                 this.leftEdge = main[0];
@@ -96,7 +96,7 @@ public class Pipe {
                 this.topEdge = main[1];
             }
 
-            if ((next[1] + next[3]) > this.topEdge) {
+			if ((next[1] + next[3]) > this.bottomEdge) {
                 this.bottomEdge = next[1] + next[3];
             } else {
                 this.bottomEdge = main[1] + main[3];
@@ -106,6 +106,7 @@ public class Pipe {
     }
 
     public void rotate(GraphicsContext ctx, int direction) {
+		System.out.println("Before rotating left : " + this.leftEdge + " Right: " + this.rightEdge + " Top: " + this.topEdge + " Bottom: " + this.bottomEdge);
         for (Block block : this.blocks) {
             //erase oldshape
             this.draw(ctx, Color.WHITE);
@@ -135,6 +136,8 @@ public class Pipe {
             //draw new shape
             this.draw(ctx);
         }
+		System.out.println("After rotating left: " + this.leftEdge + " Right: " + this.rightEdge + " Top: " + this.topEdge + " Bottom: " + this.bottomEdge);
+       
     }
 
     public void checkConnections(Grid grid, SinglyList list) {
