@@ -46,20 +46,20 @@ public class WaterDrop extends Application {
 
         ctx.setStroke(Color.BLACK);
         ctx.setLineWidth(2);
-
+		System.out.println("numColumns " + numColumns);
+		System.out.println("numRows " + numRows);
         Grid grid = new Grid(numColumns, numRows);
         grid.drawBorders(ctx);
         grid.draw(ctx);
         grid.drawBoxes(ctx);
-        SinglyList list = new SinglyList();
-        list.add(grid.pipeStart);
-
+		System.out.println("------------------------");
+		MyTree tree = new MyTree(grid.pipeStart);
         //Creating the mouse event handler 
         EventHandler<javafx.scene.input.MouseEvent> eventHandler
                 = new EventHandler<MouseEvent>() {
             @Override
             public void handle(javafx.scene.input.MouseEvent mouseEvent) {
-                rotatePipe(mouseEvent.getSceneX(), mouseEvent.getSceneY(), grid, list, ctx);
+                rotatePipe(mouseEvent.getSceneX(), mouseEvent.getSceneY(), grid, ctx);
             }
         };
 
@@ -72,7 +72,7 @@ public class WaterDrop extends Application {
         theStage.show();
     }
 
-    public void rotatePipe(double x, double y, Grid grid, SinglyList list, GraphicsContext ctx) {
+    public void rotatePipe(double x, double y, Grid grid, GraphicsContext ctx) {
         //loops through grid to find and rotate the pipe that was clicked
         boolean newConnection;
         List<List<Pipe>> pipeGrid = grid.grid;
@@ -82,14 +82,13 @@ public class WaterDrop extends Application {
                 if (pipe == null) {
                     //used to ignore any grid spaces which do not have pipe assigned
                 } else if (((x >= pipe.leftEdge) && (x <= pipe.rightEdge)) && ((y >= pipe.topEdge) && (y <= pipe.bottomEdge))) {
-                    //System.out.println("(x,y) = (" + pipeGrid.indexOf(pipeList) + "," + pipeList.indexOf(pipe) + ")");
                     pipe.rotate(ctx, 1);
-                   // int[] ref = grid.getGridReference(pipe);
-                   // pipe.checkConnections(grid, list);
-                    pipe.checkPipeCanBeAddedToList(grid, list);
-                    //check for new connection here 
-                    //newConnection = checkForConnection
-                    //if newConnection list.addPipe
+					if (pipe.inTree()){
+						System.out.println("This pipe is already inTree checking if needs removing");
+						pipe.checkPipeNeedsRemoving(grid);
+					} else {
+						pipe.checkConnections(grid);
+					}
                 }
             }
         }
