@@ -28,6 +28,8 @@ public class Pipe {
 	Pipe parent;
 	ArrayList<Pipe> children;
 	boolean inTree;
+	int gridX;
+	int gridY;
 
     Pipe(List<Block> blocks, Color colour) {
         this.blocks = blocks;
@@ -40,6 +42,8 @@ public class Pipe {
         this.bottomConnected = false;
 		this.inTree = false;
 		this.children = new ArrayList<Pipe>();
+		this.gridX = 0;
+		this.gridY = 0;
     }
 
     //change order of blocks and colour
@@ -367,7 +371,23 @@ public class Pipe {
 	public void removeParent(){
 		this.parent = null;
 	}
-
+	
+	public void setGridReference(int x, int y){
+		this.gridX = x;
+		this.gridY = y;
+	}
+	
+	public int getGridX(){
+		return this.gridX;
+	}
+	
+	public int getGridY(){
+		return this.gridY;
+	}
+	
+	public String getGridReference(){
+		return "(" + this.gridX + "," + this.gridY + ")";
+	}
 	
 	public void setParent(Pipe newParent){
 		this.parent = newParent;
@@ -380,9 +400,10 @@ public class Pipe {
     @Override
     public String toString() {
         String pipeString = "";
-        pipeString += (this.blocks.toString());
+        //pipeString += (this.blocks.toString());
 		//pipeString += "Left: " + this.leftEdge + " Right: " + this.rightEdge + " Top: " + this.topEdge + " Bottom: " + this.bottomEdge;
         //pipeString += "Connected Left: " + this.leftConnected + " Right: " + this.rightConnected + " Top: " + this.topConnected + " Bottom: " + this.bottomConnected;
+		pipeString += this.getGridReference();
 		String pipeString2 = "[]";
 
         return pipeString;

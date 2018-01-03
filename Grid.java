@@ -27,6 +27,7 @@ public class Grid {
     int randomEnd;
 
     Grid(int numColumns, int numRows) {
+		Pipe addedPipe;
         this.numColumns = numColumns;
         this.numRows = numRows;
         //used to clone pipes
@@ -47,23 +48,26 @@ public class Grid {
                 int randomNum = this.getRandomNumber(3);
                 switch (randomNum) {
                     case 1: {
-                        grid2.get(i).add(cloner.deepClone(this.pipeA));
+						addedPipe = cloner.deepClone(this.pipeA);
                     }
                     break;
                     case 2: {
-                        grid2.get(i).add(cloner.deepClone(this.pipeB));
+						addedPipe = cloner.deepClone(this.pipeB);
                     }
                     break;
 
                     case 3: {
-                        grid2.get(i).add(cloner.deepClone(this.pipeC));
+						addedPipe = cloner.deepClone(this.pipeC);
                     }
                     break;
 
                     default: {
-                        grid2.get(i).add(cloner.deepClone(this.pipeA));
+						addedPipe = cloner.deepClone(this.pipeA);
                     }
                 }
+				
+                grid2.get(i).add(addedPipe);
+				addedPipe.setGridReference(i, (j-1));
             }
         }
 		
@@ -136,6 +140,7 @@ public class Grid {
 
     private void updateStartEndPipePosition() {
         Pipe startPipe = this.grid.get(this.randomStart).get(0);
+		startPipe.setGridReference(this.randomStart, 0);
         List<Block> blocks = startPipe.blocks;
         for (Block block : blocks) {
             //for each blocks orientation update the value of ONE TWO THREE FOUR
@@ -145,6 +150,7 @@ public class Grid {
         startPipe.updatesEdges();
 
         Pipe endPipe = this.grid.get(this.randomEnd).get(this.numRows - 1);
+		endPipe.setGridReference(this.randomEnd, this.numRows - 1);
         List<Block> blocks2 = endPipe.blocks;
         for (Block block : blocks2) {
             //for each blocks orientation update the value of ONE TWO THREE FOUR
