@@ -83,11 +83,12 @@ public class WaterDrop extends Application {
                     //used to ignore any grid spaces which do not have pipe assigned
                 } else if (((x >= pipe.leftEdge) && (x <= pipe.rightEdge)) && ((y >= pipe.topEdge) && (y <= pipe.bottomEdge))) {
                     pipe.rotate(ctx, 1);
+					System.out.println("clicked pipe " + pipe);
 					if (pipe.inTree()){
 						System.out.println("This pipe is already inTree checking if needs removing");
-						pipe.checkPipeNeedsRemoving(grid);
+						pipe.checkPipeNeedsRemoving(grid, ctx);
 					} else {
-						pipe.checkConnections(grid);
+						pipe.checkConnections(grid, ctx);
 					}
                 }
             }

@@ -71,7 +71,7 @@ public class Block {
     
     @Override
     public String toString() {
-        return "X : " + this.x + " Y: " + this.y + " Width: " + this.width + " Height" + this.height + " orientation" + this.orientation;
+        return "X : " + this.x + " Y: " + this.y + " Width: " + this.width + " Height" + this.height;// + " orientation" + this.orientation;
     }
 
 }
