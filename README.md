@@ -25,12 +25,12 @@ In addition to all of the features from the original game, I intend to implement
     <p> The <a class="start">START</a> and <a class="end">END</a> pipes cannot be rotated, and do not contribute to your score</p> 
     
 ## Compile instructions (windows 7)
-### Using Command Line or powershell:
-1. Download the repository, extract the files(if necessary), 
-1. Navigate to the folder of the downnloaded repository
-1. Enter the following Two commands to compile and run the game
+### Using Command Prompt/PowerShell:
+1. Download the repository, extract the files(if necessary)
+1. Navigate to the folder of the downloaded repository
+1. Enter the following Two commands to compile and run the game in chosen command line
 ```
 javac -cp ".;lib/*" *.java
 java -cp ".;lib/*" WaterDrop
 ```
-Note: The latest Java version which has successfully compiled the code is "1.8.0_181" (JDK 8), JDK 10 is to be tested
+Note: The latest Java version which has sucessfully compiled the code is "1.8.0_181" (JDK 8), JDK 10 is to be tested
