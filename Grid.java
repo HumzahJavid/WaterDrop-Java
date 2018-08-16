@@ -82,6 +82,10 @@ public class Grid {
         this.updateStartEndPipePosition();
     }
 
+    public List<List<Pipe>> getGrid() {
+        return this.grid;
+    }
+    
     private int getRandomNumber(int max) {
         int randomNumber = (int) (Math.random() * max);
         return (randomNumber + 1);
@@ -234,6 +238,11 @@ public class Grid {
         return gridRef;
     }
 
+    public int[] getSize() {
+        int[] size = { this.numColumns, this.numRows };
+        return size;
+    }
+
     public String toString() {
         String string = "";
 
@@ -250,7 +259,7 @@ public class Grid {
 		System.out.println("state of grid");
 		for (int i = 0; i < 14; i++){
 			System.out.println("i = " + i);
-			System.out.println(this.grid.get(i));//.set(i, null);
+            System.out.println(this.grid.get(i));//.set(i, null);
 		}
 	}
 }
