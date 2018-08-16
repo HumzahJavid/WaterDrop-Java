@@ -155,19 +155,19 @@ public class Pipe {
 		//System.out.println("After rotating left: " + this.leftEdge + " Right: " + this.rightEdge + " Top: " + this.topEdge + " Bottom: " + this.bottomEdge);
     }
 	
-    public void checkConnections(Grid grid, GraphicsContext ctx) {
+	public void checkConnections(Grid grid, GraphicsContext ctx) {
 		System.out.println("running checkconnections");
         int[] gridRef = grid.getGridReference(this);
         int x = gridRef[0];
         int y = gridRef[1];
         //left pipe
-        Pipe leftPipe = grid.grid.get(x - 1).get(y);
+        Pipe leftPipe = grid.getGrid().get(x - 1).get(y);
         //right pipe
-        Pipe rightPipe = grid.grid.get(x + 1).get(y);
+        Pipe rightPipe = grid.getGrid().get(x + 1).get(y);
         //top pipe
-        Pipe topPipe = grid.grid.get(x).get(y - 1);
+        Pipe topPipe = grid.getGrid().get(x).get(y - 1);
         //bottom pipe
-        Pipe bottomPipe = grid.grid.get(x).get(y + 1);
+        Pipe bottomPipe = grid.getGrid().get(x).get(y + 1);
 
 		if (leftPipe == null){
 			System.out.println("left pipe is null");
@@ -246,10 +246,10 @@ public class Pipe {
         int x = gridRef[0];
         int y = gridRef[1];
 
-        Pipe leftPipe = grid.grid.get(x - 1).get(y);
-        Pipe rightPipe = grid.grid.get(x + 1).get(y);
-        Pipe topPipe = grid.grid.get(x).get(y - 1);
-        Pipe bottomPipe = grid.grid.get(x).get(y + 1);
+        Pipe leftPipe = grid.getGrid().get(x - 1).get(y);
+        Pipe rightPipe = grid.getGrid().get(x + 1).get(y);
+        Pipe topPipe = grid.getGrid().get(x).get(y - 1);
+        Pipe bottomPipe = grid.getGrid().get(x).get(y + 1);
 		
 		if (leftPipe == null){
 			System.out.println("left pipe is null");
