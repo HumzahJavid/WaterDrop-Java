@@ -31,22 +31,54 @@ public class Graph {
         this.populateAdjacencyMatrix();
     }
 
-    
-    //this recreates the matrix every pipe rotation (inefficient)
+    // this recreates the matrix every pipe rotation (inefficient)
     public void calculateMatrix() {
         this.reset();
         this.populateAdjacencyMatrix();
+        this.dfs();
+    }
+
+    // parent depth first search function
+    public void dfs() {
+        // similar to this.adjMatrix, but keeps track of visited edges
+        int[][] visitedEdges = new int[numberOfPipes][numberOfPipes];
+        dfs(0, visitedEdges);
     }
     
-    //may have potential use later
-    //converts (1, 2) to #13
+    //actual depth first search function
+    public void dfs(int numberPipeFrom, int[][] visitedEdges) {
+        int[] pipeConnectionsTo = adjMatrix[numberPipeFrom];
+        // for each potential edge
+        for (int i = 0; i < pipeConnectionsTo.length; i++) {
+            // there is an edge
+            if (pipeConnectionsTo[i] == 1) {
+                // if edge is connecting to goal pipe
+                if (i == 61) {
+                    System.out.println("GOAL PIPE REACHED");
+                } else {
+                    // if the edge has not been visited
+                    if (visitedEdges[numberPipeFrom][i] == 0) {
+                        System.out.println("visiting edge: pipe #" + numberPipeFrom + " is connected to " + i);
+                        // update state of visited edges
+                        visitedEdges[numberPipeFrom][i] = 1;
+                        visitedEdges[i][numberPipeFrom] = 1;
+                        // recursive call with updated state
+                        dfs(i, visitedEdges);
+                    }
+                }
+            }
+        }
+    }
+
+    // may have potential use later
+    // converts (1, 2) to #13
     public int gridRefToPipeNumber(int[] gridRef) {
         int x = gridRef[0];
         int y = gridRef[1];
         return ((x + 1) + ((y - 1) * 12));
     }
 
-    //checks if pipeA and pipeB are connected
+    // checks if pipeA and pipeB are connected
     public boolean isConnected(Pipe pipeA, Pipe pipeB) {
         boolean connected = false;
         int pipeAX = pipeA.getGridX();
@@ -78,7 +110,7 @@ public class Graph {
         return connected;
     }
 
-    //converts #13 to (1, 2)
+    // converts #13 to (1, 2)
     public int[] pipeNumberToGridRef(int pipeNumber) {
         int x = pipeNumber % 12;
         int y = (pipeNumber / 12) + 1;
@@ -97,10 +129,11 @@ public class Graph {
                 y = y - 1;
             }
         }
-        int[] reference = {x, y};
+        int[] reference = { x, y };
         return reference;
     }
 
+    //
     public void populateAdjacencyMatrix() {
         this.adjMatrix = new int[numberOfPipes][numberOfPipes];
         Pipe pipeA;
