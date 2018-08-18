@@ -261,5 +261,65 @@ public class Grid {
 			System.out.println("i = " + i);
             System.out.println(this.grid.get(i));//.set(i, null);
 		}
-	}
+    }
+    
+    // identical to the constructor (with same args)
+    // very slow!!!
+    public void reset(int numColumns, int numRows) {
+        Pipe addedPipe;
+        this.numColumns = numColumns;
+        this.numRows = numRows;
+        // used to clone pipes
+        Cloner cloner = new Cloner();
+        // creates the blueprint of the playable pipe pieces (each with 4 orientations)
+        this.setupDefaultPipes();
+
+        List<List<Pipe>> grid2 = new ArrayList<List<Pipe>>(numColumns);
+        // creates the spaces for the pipes
+        for (int i = 0; i < numColumns; i++) { // < 14 (pos of right border)
+            grid2.add(new ArrayList<Pipe>(numRows));
+        }
+
+        // fills in playable pipes
+        for (int i = 1; i < 13; i++) {
+            for (int j = 1; j < numRows; j++) {
+
+                int randomNum = this.getRandomNumber(3);
+                switch (randomNum) {
+                case 1: {
+                    addedPipe = cloner.deepClone(this.pipeA);
+                }
+                    break;
+                case 2: {
+                    addedPipe = cloner.deepClone(this.pipeB);
+                }
+                    break;
+
+                case 3: {
+                    addedPipe = cloner.deepClone(this.pipeC);
+                }
+                    break;
+
+                default: {
+                    addedPipe = cloner.deepClone(this.pipeA);
+                }
+                }
+
+                grid2.get(i).add(addedPipe);
+                addedPipe.setGridReference(i, (j - 1));
+            }
+        }
+
+        grid2 = this.applyNullBorder(grid2);
+        this.randomStart = getRandomNumber(numColumns - 2);
+        this.randomEnd = getRandomNumber(numColumns - 2);
+        grid2.get(this.randomStart).set(0, this.pipeStart);
+        grid2.get(this.randomEnd).set(this.numRows - 1, this.pipeEnd);
+        this.grid = grid2;
+        // moves each generated pipe to the correct grid square (using its grid
+        // reference)
+        this.updatePipePosition();
+        this.updateStartEndPipePosition();
+        System.out.println("Reset grid");
+    }
 }

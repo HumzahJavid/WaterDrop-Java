@@ -23,7 +23,10 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.FontPosture;
 
 public class WaterDrop extends Application {
-
+    Grid grid;
+    Graph graph;
+    Canvas canvas;
+    GraphicsContext ctx;
     public static void main(String[] args) {
         launch(args);
     }
@@ -36,8 +39,8 @@ public class WaterDrop extends Application {
         theStage.setTitle("WaterDrop prototype");
         theStage.setScene(theScene);
 
-        Canvas canvas = new Canvas(1400, 700);
-        GraphicsContext ctx = canvas.getGraphicsContext2D();
+        canvas = new Canvas(1400, 700);
+        ctx = canvas.getGraphicsContext2D();
         double height = ctx.getCanvas().getHeight();
         double width = ctx.getCanvas().getWidth();
 
@@ -49,13 +52,13 @@ public class WaterDrop extends Application {
         ctx.setLineWidth(2);
 		System.out.println("numColumns " + numColumns);
 		System.out.println("numRows " + numRows);
-        Grid grid = new Grid(numColumns, numRows);
+        grid = new Grid(numColumns, numRows);
         grid.drawBorders(ctx);
         grid.draw(ctx);
         grid.drawBoxes(ctx);
 		System.out.println("------------------------");
 		MyTree tree = new MyTree(grid.pipeStart); 
-        Graph graph = new Graph(grid, numberOfPipes);
+        graph = new Graph(grid, numberOfPipes);
         //Creating the mouse event handler 
         EventHandler<javafx.scene.input.MouseEvent> eventHandler
                 = new EventHandler<MouseEvent>() {
@@ -65,6 +68,7 @@ public class WaterDrop extends Application {
                 graph.calculateMatrix();
                 if (graph.isLevelFinished()){
                     System.out.println("level complete");
+                    newLevel(theStage, canvas, ctx, numberOfPipes);
                 }
             }
         };
@@ -101,5 +105,30 @@ public class WaterDrop extends Application {
                 }
             }
         }
+    }
+
+    public void newLevel(Stage theStage, Canvas canvas, GraphicsContext ctx, int numberOfPipes) {
+
+        double height = canvas.getHeight();
+        double width = canvas.getWidth();
+
+        ctx.clearRect(0, 0, width, height);
+
+        int numRows = (int) height / 100;
+        int numColumns = (int) width / 100;
+
+        ctx.setStroke(Color.BLACK);
+        ctx.setLineWidth(2);
+        System.out.println("numColumns " + numColumns);
+        System.out.println("numRows " + numRows);
+        grid = new Grid(numColumns, numRows);
+        //resetting grid takes a long time, faster to run the constructor again
+        //grid.reset(numColumns, numRows);
+        grid.drawBorders(ctx);
+        grid.draw(ctx);
+        grid.drawBoxes(ctx);
+        System.out.println("------------------------");
+
+        graph.reset(grid, numberOfPipes);
     }
 }

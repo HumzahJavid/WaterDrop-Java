@@ -10,7 +10,6 @@ import java.util.List;
 
 public class Graph {
     private List<List<Pipe>> vertices;
-    private int numColumns;
     private int numRows;
     private int[][] adjMatrix;
     private int numberOfPipes;
@@ -26,7 +25,6 @@ public class Graph {
     public Graph(Grid grid, int numberOfPipes) {
         this.grid = grid;
         this.vertices = grid.getGrid();
-        this.numColumns = grid.numColumns;
         this.numRows = grid.numRows;
         this.numberOfPipes = numberOfPipes;
         this.populateAdjacencyMatrix();
@@ -34,7 +32,7 @@ public class Graph {
 
     // this recreates the matrix every pipe rotation (inefficient)
     public void calculateMatrix() {
-        this.reset();
+        this.resetMatrix();
         this.populateAdjacencyMatrix();
         this.dfs();
     }
@@ -169,7 +167,17 @@ public class Graph {
         }
     }
 
-    public void reset() {
+    //resets the variables of the class
+    public void reset(Grid grid, int numberOfPipes){
+        this.grid = grid;
+        this.vertices = grid.getGrid();
+        this.numRows = grid.numRows;
+        this.numberOfPipes = numberOfPipes;
+        this.populateAdjacencyMatrix();
+        this.pathToGoalPipe = false;
+    }
+
+    public void resetMatrix() {
         for (int i = 0; i < adjMatrix.length; i++) {
             for (int j = 0; j < adjMatrix.length; j++) {
                 adjMatrix[i][j] = 0;
