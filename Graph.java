@@ -15,6 +15,7 @@ public class Graph {
     private int[][] adjMatrix;
     private int numberOfPipes;
     private Grid grid;
+    private boolean pathToGoalPipe = false;
 
     public Graph(List<List<Pipe>> pipes) {
         this.vertices = pipes;
@@ -42,10 +43,12 @@ public class Graph {
     public void dfs() {
         // similar to this.adjMatrix, but keeps track of visited edges
         int[][] visitedEdges = new int[numberOfPipes][numberOfPipes];
+        // reset to false to prevent false level completion
+        this.pathToGoalPipe = false;
         dfs(0, visitedEdges);
     }
-    
-    //actual depth first search function
+
+    // actual depth first search function
     public void dfs(int numberPipeFrom, int[][] visitedEdges) {
         int[] pipeConnectionsTo = adjMatrix[numberPipeFrom];
         // for each potential edge
@@ -55,6 +58,7 @@ public class Graph {
                 // if edge is connecting to goal pipe
                 if (i == 61) {
                     System.out.println("GOAL PIPE REACHED");
+                    this.pathToGoalPipe = true;
                 } else {
                     // if the edge has not been visited
                     if (visitedEdges[numberPipeFrom][i] == 0) {
@@ -108,6 +112,10 @@ public class Graph {
             connected = true;
         }
         return connected;
+    }
+
+    public boolean isLevelFinished() {
+        return pathToGoalPipe;
     }
 
     // converts #13 to (1, 2)
