@@ -63,6 +63,9 @@ public class WaterDrop extends Application {
             public void handle(javafx.scene.input.MouseEvent mouseEvent) {
                 rotatePipe(mouseEvent.getSceneX(), mouseEvent.getSceneY(), grid, ctx);
                 graph.calculateMatrix();
+                if (graph.isLevelFinished()){
+                    System.out.println("level complete");
+                }
             }
         };
 
