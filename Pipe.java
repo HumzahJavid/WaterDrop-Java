@@ -131,22 +131,23 @@ public class Pipe {
                 case 1: {
                     if (this.orientation == 4) {
                         this.orientation = 1;
-                        block.rotate();
+                        block.rotate(direction);
                     } else {
                         this.orientation += direction;
-                        block.rotate();
+                        block.rotate(direction);
                     }
                 }
                 break;
                 case -1: {
                     if (this.orientation == 1) {
                         this.orientation = 4;
-                        block.rotate();
+                        block.rotate(direction);
                     } else {
                         this.orientation += direction;
-                        block.rotate();
+                        block.rotate(direction);
                     }
                 }
+				break;
             }
             this.updatesEdges();
             //draw new shape

@@ -64,7 +64,18 @@ public class WaterDrop extends Application {
                 = new EventHandler<MouseEvent>() {
             @Override
             public void handle(javafx.scene.input.MouseEvent mouseEvent) {
-                rotatePipe(mouseEvent.getSceneX(), mouseEvent.getSceneY(), grid, ctx);
+                int direction;
+                //if left click, rotate clockwise
+				if (mouseEvent.getButton() == javafx.scene.input.MouseButton.PRIMARY) {
+                    direction = 1;
+                //else if right click, rotate anticlokwise
+				} else if (mouseEvent.getButton() == javafx.scene.input.MouseButton.SECONDARY){
+                    direction = -1;
+                //unforseen circumstances, rotate clockwise
+				} else {
+					direction = 1;
+				}
+                rotatePipe(mouseEvent.getSceneX(), mouseEvent.getSceneY(), grid, ctx, direction);
                 graph.calculateMatrix();
                 if (graph.isLevelFinished()){
                     System.out.println("level complete");
@@ -82,7 +93,7 @@ public class WaterDrop extends Application {
         theStage.show();
     }
 
-    public void rotatePipe(double x, double y, Grid grid, GraphicsContext ctx) {
+    public void rotatePipe(double x, double y, Grid grid, GraphicsContext ctx, int direction) {
         //loops through grid to find and rotate the pipe that was clicked
         boolean newConnection;
         List<List<Pipe>> pipeGrid = grid.getGrid();
@@ -92,7 +103,8 @@ public class WaterDrop extends Application {
                 if (pipe == null) {
                     //used to ignore any grid spaces which do not have pipe assigned
                 } else if (((x >= pipe.leftEdge) && (x <= pipe.rightEdge)) && ((y >= pipe.topEdge) && (y <= pipe.bottomEdge))) {
-                    pipe.rotate(ctx, 1);
+                    
+					pipe.rotate(ctx, direction);
                     /*
                     System.out.println("clicked pipe " + pipe);
                     if (pipe.inTree()){

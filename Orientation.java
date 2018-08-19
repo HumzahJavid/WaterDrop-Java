@@ -33,6 +33,20 @@ public class Orientation {
         }
         return nextOrientation;
     }
+	
+	public int[] previous() {
+        int[] nextOrientation = null;
+        if (currentOrientation == ONE) {
+            nextOrientation = FOUR;
+        } else if (currentOrientation == FOUR) {
+            nextOrientation = THREE;
+        } else if (currentOrientation == THREE) {
+            nextOrientation = TWO;
+        } else if (currentOrientation == TWO) {
+            nextOrientation = ONE;
+        }
+        return nextOrientation;
+    }
 
     public void printVals() {
         ArrayList<int[]> orient = new ArrayList<int[]>();

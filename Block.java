@@ -57,8 +57,14 @@ public class Block {
         ctx.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }
 
-    public void rotate() {
-        this.orientation.currentOrientation = this.orientation.next();
+    public void rotate(int direction) {
+		if (direction == 1){
+			this.orientation.currentOrientation = this.orientation.next();
+		} else if (direction == -1){
+			this.orientation.currentOrientation = this.orientation.previous();
+		} else {
+			this.orientation.currentOrientation = this.orientation.next();
+		}
         this.update();
     }
 
