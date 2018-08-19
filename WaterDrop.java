@@ -57,8 +57,7 @@ public class WaterDrop extends Application {
         grid.draw(ctx);
         grid.drawBoxes(ctx);
 		System.out.println("------------------------");
-		MyTree tree = new MyTree(grid.pipeStart); 
-        graph = new Graph(grid, numberOfPipes);
+		graph = new Graph(grid, numberOfPipes);
         //Creating the mouse event handler 
         EventHandler<javafx.scene.input.MouseEvent> eventHandler
                 = new EventHandler<MouseEvent>() {
@@ -95,7 +94,6 @@ public class WaterDrop extends Application {
 
     public void rotatePipe(double x, double y, Grid grid, GraphicsContext ctx, int direction) {
         //loops through grid to find and rotate the pipe that was clicked
-        boolean newConnection;
         List<List<Pipe>> pipeGrid = grid.getGrid();
 
         for (List<Pipe> pipeList : pipeGrid) {
@@ -105,15 +103,6 @@ public class WaterDrop extends Application {
                 } else if (((x >= pipe.leftEdge) && (x <= pipe.rightEdge)) && ((y >= pipe.topEdge) && (y <= pipe.bottomEdge))) {
                     
 					pipe.rotate(ctx, direction);
-                    /*
-                    System.out.println("clicked pipe " + pipe);
-                    if (pipe.inTree()){
-						System.out.println("This pipe is already inTree checking if needs removing");
-						pipe.checkPipeNeedsRemoving(grid, ctx);
-					} else {
-						pipe.checkConnections(grid, ctx);
-                    }
-                    */
                 }
             }
         }
