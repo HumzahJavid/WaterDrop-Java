@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ArrayList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 //new cloning library (used to make deep copies of pipes)
 //https://github.com/kostaskougios/cloning
@@ -162,6 +163,12 @@ public class Grid {
             block.update();
         }
         endPipe.updatesEdges();
+    }
+
+    public void displayText(GraphicsContext ctx, int level){
+        ctx.setFont(Font.font("Arial Bold", 20));
+        ctx.setFill(Color.WHITE);
+        ctx.fillText("Level: " + level, 6, 17);
     }
 
     public void draw(GraphicsContext ctx) {

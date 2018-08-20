@@ -27,6 +27,7 @@ public class WaterDrop extends Application {
     Graph graph;
     Canvas canvas;
     GraphicsContext ctx;
+    int level;
     public static void main(String[] args) {
         launch(args);
     }
@@ -48,6 +49,7 @@ public class WaterDrop extends Application {
         int numColumns = (int) width / 100;
 
         int numberOfPipes = ((numColumns - 2) * (numRows - 2)) + 2;
+        level = 1;
         ctx.setStroke(Color.BLACK);
         ctx.setLineWidth(2);
 		System.out.println("numColumns " + numColumns);
@@ -56,6 +58,7 @@ public class WaterDrop extends Application {
         grid.drawBorders(ctx);
         grid.draw(ctx);
         grid.drawBoxes(ctx);
+        grid.displayText(ctx, level);
 		System.out.println("------------------------");
 		graph = new Graph(grid, numberOfPipes);
         //Creating the mouse event handler 
@@ -128,6 +131,8 @@ public class WaterDrop extends Application {
         grid.drawBorders(ctx);
         grid.draw(ctx);
         grid.drawBoxes(ctx);
+        level+=1;
+        grid.displayText(ctx, level);
         System.out.println("------------------------");
 
         graph.reset(grid, numberOfPipes);
