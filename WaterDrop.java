@@ -28,6 +28,8 @@ public class WaterDrop extends Application {
     Canvas canvas;
     GraphicsContext ctx;
     int level;
+	boolean startPipeClicked;
+	boolean endPipeClicked;
     public static void main(String[] args) {
         launch(args);
     }
@@ -79,8 +81,7 @@ public class WaterDrop extends Application {
 				}
                 rotatePipe(mouseEvent.getSceneX(), mouseEvent.getSceneY(), grid, ctx, direction);
                 graph.calculateMatrix();
-                if (graph.isLevelFinished()){
-                    System.out.println("level complete");
+                if (graph.isLevelFinished() && endPipeClicked){
                     newLevel(theStage, canvas, ctx, numberOfPipes);
                 }
             }
@@ -98,14 +99,20 @@ public class WaterDrop extends Application {
     public void rotatePipe(double x, double y, Grid grid, GraphicsContext ctx, int direction) {
         //loops through grid to find and rotate the pipe that was clicked
         List<List<Pipe>> pipeGrid = grid.getGrid();
-
+		startPipeClicked = false;
+		endPipeClicked = false;
         for (List<Pipe> pipeList : pipeGrid) {
             for (Pipe pipe : pipeList) {
                 if (pipe == null) {
                     //used to ignore any grid spaces which do not have pipe assigned
                 } else if (((x >= pipe.leftEdge) && (x <= pipe.rightEdge)) && ((y >= pipe.topEdge) && (y <= pipe.bottomEdge))) {
-                    
-					pipe.rotate(ctx, direction);
+					if (pipe == grid.pipeStart){
+						startPipeClicked = true;
+					} else if (pipe == grid.pipeEnd){
+						endPipeClicked = true;
+					} else {
+						pipe.rotate(ctx, direction);
+					}
                 }
             }
         }
@@ -132,6 +139,7 @@ public class WaterDrop extends Application {
         grid.draw(ctx);
         grid.drawBoxes(ctx);
         level+=1;
+		System.out.println("Loading next level : " + level);
         grid.displayText(ctx, level);
         System.out.println("------------------------");
 
