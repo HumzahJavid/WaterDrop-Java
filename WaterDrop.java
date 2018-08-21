@@ -119,11 +119,13 @@ public class WaterDrop extends Application {
     }
 
     public void newLevel(Stage theStage, Canvas canvas, GraphicsContext ctx, int numberOfPipes) {
-
+        //increment canvas size by 100, to add a new row
+        canvas.setHeight(canvas.getHeight() + 100);
+        //canvas.setWidth(canvas.getWidth() + 100);
         double height = canvas.getHeight();
         double width = canvas.getWidth();
 
-        ctx.clearRect(0, 0, width, height);
+        ctx.clearRect(0, 0, width, (height + 100));
 
         int numRows = (int) height / 100;
         int numColumns = (int) width / 100;

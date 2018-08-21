@@ -54,7 +54,7 @@ public class Graph {
             // there is an edge
             if (pipeConnectionsTo[i] == 1) {
                 // if edge is connecting to goal pipe
-                if (i == 61) {
+                if (i == (numberOfPipes - 1)) {
                     System.out.println("GOAL PIPE REACHED");
                     this.pathToGoalPipe = true;
                 } else {
