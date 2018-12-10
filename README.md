@@ -27,10 +27,26 @@ In addition to all of the features from the original game, I intend to implement
 ## Compile instructions (windows 7)
 ### Using Command Prompt/PowerShell:
 1. Download the repository, extract the files(if necessary)
+```
+git clone https://github.com/HumzahJavid/WaterDrop-Java
+```
 1. Navigate to the folder of the downloaded repository
 1. Enter the following Two commands to compile and run the game in chosen command line
 ```
 javac -cp ".;lib/*" *.java
 java -cp ".;lib/*" WaterDrop
 ```
+## Compile instructions (macOS High Sierra)
+### Using Terminal:
+1. Download the repository, extract the files(if necessary)
+```
+git clone https://github.com/HumzahJavid/WaterDrop-Java
+```
+1. Navigate to the folder of the downloaded repository
+1. Enter the following Two commands to compile and run the game in chosen command line
+```
+javac -cp ".:lib/*" *.java
+java -cp ".:lib/*" WaterDrop
+```      
+
 Note: The latest Java version which has sucessfully compiled the code is "1.8.0_181" (JDK 8), JDK 10 is to be tested
