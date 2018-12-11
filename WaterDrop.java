@@ -55,7 +55,8 @@ public class WaterDrop extends Application {
         ctx.setStroke(Color.BLACK);
         ctx.setLineWidth(2);
 		System.out.println("numColumns " + numColumns);
-		System.out.println("numRows " + numRows);
+        System.out.println("numRows " + numRows);
+        System.out.println("numPipes" + numberOfPipes);
         grid = new Grid(numColumns, numRows);
         grid.drawBorders(ctx);
         grid.draw(ctx);
@@ -129,11 +130,12 @@ public class WaterDrop extends Application {
 
         int numRows = (int) height / 100;
         int numColumns = (int) width / 100;
-
+        numberOfPipes = ((numColumns - 2) * (numRows - 2)) + 2;
         ctx.setStroke(Color.BLACK);
         ctx.setLineWidth(2);
         System.out.println("numColumns " + numColumns);
         System.out.println("numRows " + numRows);
+        System.out.println("numPipes" + numberOfPipes);
         grid = new Grid(numColumns, numRows);
         //resetting grid takes a long time, faster to run the constructor again
         //grid.reset(numColumns, numRows);
