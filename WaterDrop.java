@@ -21,6 +21,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.FontPosture;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.layout.GridPane;
+import javafx.geometry.Orientation;
 
 public class WaterDrop extends Application {
     Grid grid;
@@ -32,6 +35,13 @@ public class WaterDrop extends Application {
 	boolean endPipeClicked;
     public static void main(String[] args) {
         launch(args);
+    }
+    public static ScrollBar createScrollBar(Orientation orientation, double fullSize, double canvasSize) {
+        ScrollBar sb = new ScrollBar();
+        sb.setOrientation(orientation);
+        sb.setMax(fullSize - canvasSize);
+        sb.setVisibleAmount(canvasSize);
+        return sb;
     }
 
     @Override
@@ -46,6 +56,17 @@ public class WaterDrop extends Application {
         ctx = canvas.getGraphicsContext2D();
         double height = ctx.getCanvas().getHeight();
         double width = ctx.getCanvas().getWidth();
+
+        ScrollBar vScroll = createScrollBar(Orientation.VERTICAL, 10000, 300);
+
+        ScrollBar hScroll = createScrollBar(Orientation.HORIZONTAL, 10000, 300);
+
+        GridPane scrollPane = new GridPane();
+        //scrollPane.addColumn(0, canvas, hScroll);
+        //scrollPane.add(vScroll, 1, 0);
+        scrollPane.addRow(0, canvas, vScroll);
+
+
 
         int numRows = (int) height / 100;
         int numColumns = (int) width / 100;
@@ -96,7 +117,8 @@ public class WaterDrop extends Application {
 
         //Remove event handler
         //canvas.removeEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-        root.getChildren().addAll(canvas);
+        //root.getChildren().addAll(canvas);
+        root.getChildren().addAll(scrollPane);
         theStage.show();
     }
 
@@ -125,7 +147,7 @@ public class WaterDrop extends Application {
     public void newLevel(Stage theStage, Canvas canvas, GraphicsContext ctx, int numberOfPipes, Boolean skipped) {
         if (!skipped) {
             //increment canvas size by 100, to add a new row
-            canvas.setHeight(canvas.getHeight() + 100);
+            canvas.setHeight(canvas.getHeight() + 700);
             //canvas.setWidth(canvas.getWidth() + 100);
             level+=1;
         } else{
