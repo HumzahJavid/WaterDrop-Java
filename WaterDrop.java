@@ -83,7 +83,10 @@ public class WaterDrop extends Application {
                 rotatePipe(mouseEvent.getSceneX(), mouseEvent.getSceneY(), grid, ctx, direction);
                 graph.calculateMatrix();
                 if (graph.isLevelFinished() && endPipeClicked){
-                    newLevel(theStage, canvas, ctx, numberOfPipes);
+                    newLevel(theStage, canvas, ctx, numberOfPipes, false);
+                } else if (!graph.isLevelFinished() && endPipeClicked){
+                    // skipped level
+                    newLevel(theStage, canvas, ctx, numberOfPipes, true);
                 }
             }
         };
@@ -119,10 +122,15 @@ public class WaterDrop extends Application {
         }
     }
 
-    public void newLevel(Stage theStage, Canvas canvas, GraphicsContext ctx, int numberOfPipes) {
-        //increment canvas size by 100, to add a new row
-        canvas.setHeight(canvas.getHeight() + 100);
-        //canvas.setWidth(canvas.getWidth() + 100);
+    public void newLevel(Stage theStage, Canvas canvas, GraphicsContext ctx, int numberOfPipes, Boolean skipped) {
+        if (!skipped) {
+            //increment canvas size by 100, to add a new row
+            canvas.setHeight(canvas.getHeight() + 100);
+            //canvas.setWidth(canvas.getWidth() + 100);
+            level+=1;
+        } else{
+            System.out.println("Skipped the level");
+        }
         double height = canvas.getHeight();
         double width = canvas.getWidth();
 
@@ -142,11 +150,9 @@ public class WaterDrop extends Application {
         grid.drawBorders(ctx);
         grid.draw(ctx);
         grid.drawBoxes(ctx);
-        level+=1;
 		System.out.println("Loading next level : " + level);
         grid.displayText(ctx, level);
         System.out.println("------------------------");
-
         graph.reset(grid, numberOfPipes);
     }
 }
