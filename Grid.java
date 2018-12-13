@@ -203,7 +203,7 @@ public class Grid {
         }
 		
 		//bottom row
-        for (int i = 0; i < numColumns - 1; i++) {
+        for (int i = 1; i < numColumns - 1; i++) {
             grid.get(i).add(null);
         }
 		return grid;
