@@ -34,7 +34,12 @@ public class WaterDrop extends Application {
     GraphicsContext ctx;
     int level;
 	boolean startPipeClicked;
-	boolean endPipeClicked;
+    boolean endPipeClicked;
+    
+    Gson gson;
+    Type type;
+    // temporary level (whilst testing)
+    String level1;
     public static void main(String[] args) {
         launch(args);
     }
@@ -63,6 +68,12 @@ public class WaterDrop extends Application {
         System.out.println("numRows " + numRows);
         System.out.println("numPipes" + numberOfPipes);
         grid = new Grid(numColumns, numRows);
+
+        gson = new Gson();
+        type = new TypeToken<List<List<Pipe>>>() {}.getType();
+        //temp save of first level
+        level1 = gson.toJson(grid.grid, type);
+
         grid.drawBorders(ctx);
         grid.draw(ctx);
         grid.drawBoxes(ctx);
@@ -128,30 +139,36 @@ public class WaterDrop extends Application {
     }
 
     public void newLevel(Stage theStage, Canvas canvas, GraphicsContext ctx, int numberOfPipes, Boolean skipped) {
-        if (!skipped) {
-            //increment canvas size by 100, to add a new row
-            canvas.setHeight(canvas.getHeight() + 100);
-            //canvas.setWidth(canvas.getWidth() + 100);
-            level+=1;
-        } else{
-            System.out.println("Skipped the level");
-        }
         double height = canvas.getHeight();
         double width = canvas.getWidth();
-
-        ctx.clearRect(0, 0, width, (height + 100));
-
-        int numRows = (int) height / 100;
-        int numColumns = (int) width / 100;
+        int numColumns, numRows;
+        
+        if (!skipped) {
+            height+=100;
+            //increment canvas size by 100, to add a new row
+            canvas.setHeight(height);
+            //canvas.setWidth(canvas.getWidth() + 100);
+            level+=1;
+            numRows = (int) height / 100;
+            numColumns = (int) width / 100;
+            grid = new Grid(numColumns, numRows);
+            //resetting grid takes a long time, faster to run the constructor again
+            //grid.reset(numColumns, numRows);
+        } else{
+            System.out.println("Skipped the level... so loading original level");
+            List<List<Pipe>> loaded = gson.fromJson(level1, type);
+            System.out.println(loaded);
+            grid = new Grid(loaded);
+            numColumns = grid.getSize()[0];
+            numRows = grid.getSize()[1];
+        }
+        ctx.clearRect(0, 0, width, height);
         numberOfPipes = ((numColumns - 2) * (numRows - 2)) + 2;
         ctx.setStroke(Color.BLACK);
         ctx.setLineWidth(2);
         System.out.println("numColumns " + numColumns);
         System.out.println("numRows " + numRows);
         System.out.println("numPipes" + numberOfPipes);
-        grid = new Grid(numColumns, numRows);
-        //resetting grid takes a long time, faster to run the constructor again
-        //grid.reset(numColumns, numRows);
         grid.drawBorders(ctx);
         grid.draw(ctx);
         grid.drawBoxes(ctx);

@@ -26,6 +26,9 @@ public class Grid {
     Pipe pipeEnd;
     int randomStart;
     int randomEnd;
+    
+    // the default unsolved version of a level 
+    private List<List<Pipe>> gridDefault;
 
     Grid(int numColumns, int numRows) {
 		Pipe addedPipe;
@@ -81,6 +84,18 @@ public class Grid {
         //moves each generated pipe to the correct grid square (using its grid reference)
         this.updatePipePosition();
         this.updateStartEndPipePosition();
+        
+        this.gridDefault = cloner.deepClone(this.grid);
+    }
+
+    //load a previous level (grid)
+    Grid(List<List<Pipe>> level){
+        this.numColumns = level.size();
+        this.numRows = level.get(0).size();
+        this.grid = level;
+
+        //find and store random start and end from loaded level;
+        loadRandomStartAndEnd();
     }
 
     public List<List<Pipe>> getGrid() {
@@ -145,7 +160,7 @@ public class Grid {
 
     private void updateStartEndPipePosition() {
         Pipe startPipe = this.grid.get(this.randomStart).get(0);
-		startPipe.setGridReference(this.randomStart, 0);
+        startPipe.setGridReference(this.randomStart, 0);
         List<Block> blocks = startPipe.blocks;
         for (Block block : blocks) {
             //for each blocks orientation update the value of ONE TWO THREE FOUR
@@ -230,6 +245,11 @@ public class Grid {
         }
     }
 
+    //Will be used in main class to store a completed (solveable) level
+    public List<List<Pipe>> getDefaultLevelGrid(){
+        return this.gridDefault;
+    }
+
     public int[] getGridReference(Pipe pipe) {
         int[] gridRef = new int[2];
         for (List<Pipe> pipeList : this.grid) {
@@ -248,6 +268,18 @@ public class Grid {
     public int[] getSize() {
         int[] size = { this.numColumns, this.numRows };
         return size;
+    }
+
+    //after level from existing grid of pipes, this class does not have values set for randomStart and randomEnd.
+    private void loadRandomStartAndEnd(){
+        for (int i = 0; i < numColumns - 1; i++) {
+            if (grid.get(i).get(0) != null){
+                this.randomStart = i;
+            }
+            if (grid.get(i).get(this.numRows - 1) != null){
+                this.randomEnd = i;
+            }
+        }
     }
 
     public String toString() {
