@@ -30,7 +30,10 @@ public class Orientation {
             nextOrientation = THREE;
         } else if (currentOrientation == THREE) {
             nextOrientation = FOUR;
-        } 
+        } else {
+            currentOrientation = ONE;
+            next();
+        }
         return nextOrientation;
     }
 	
@@ -44,6 +47,9 @@ public class Orientation {
             nextOrientation = TWO;
         } else if (currentOrientation == TWO) {
             nextOrientation = ONE;
+        } else {
+            currentOrientation = ONE;
+            previous();
         }
         return nextOrientation;
     }
