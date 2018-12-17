@@ -30,7 +30,7 @@ public class Orientation {
             nextOrientation = THREE;
         } else if (currentOrientation == THREE) {
             nextOrientation = FOUR;
-        }
+        } 
         return nextOrientation;
     }
 	
@@ -59,6 +59,23 @@ public class Orientation {
     
     public String toString() {
         String string = "";
+        string+="ONE: ";
+        for (int val : this.ONE) {
+            string += val + " ,";
+        }
+        string+="TWO: ";
+        for (int val : this.TWO) {
+            string += val + " ,";
+        }
+        string+="THREE: ";
+        for (int val : this.THREE) {
+            string += val + " ,";
+        }
+        string+="FOUR: ";
+        for (int val : this.FOUR) {
+            string += val + " ,";
+        }
+        string+="currentOrientation: ";
         for (int val : this.currentOrientation) {
             string += val + " ,";
         }
