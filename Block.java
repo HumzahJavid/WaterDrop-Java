@@ -58,26 +58,12 @@ public class Block {
     }
 
     public void rotate(int direction) {
-        System.out.println("rotating block");
-        System.out.println("this.block.orientation before rotation \n" + this.orientation);
-
-        System.out.println("this.block.ONE before rotation \n" + this.orientation.ONE);
-
-        System.out.println("this.block.TWO before rotation \n" + this.orientation.TWO);
-
-        System.out.println("this.block.THREE before rotation \n" + this.orientation.THREE);
-
-        System.out.println("this.block.FOUR before rotation \n" + this.orientation.FOUR);
-
-        System.out.println("this.block.currentOrientation before rotation \n" + this.orientation.currentOrientation);
-
-        System.out.println("this.block.orientation.next() before rotation \n" + this.orientation.next());
         if (direction == 1){
 			this.orientation.currentOrientation = this.orientation.next();
 		} else if (direction == -1){
 			this.orientation.currentOrientation = this.orientation.previous();
 		} else {
-			this.orientation.currentOrientation = this.orientation.next();
+            this.orientation.currentOrientation = this.orientation.next();
         }
         this.update();
     }

@@ -32,7 +32,7 @@ public class Orientation {
             nextOrientation = FOUR;
         } else {
             currentOrientation = ONE;
-            next();
+            nextOrientation = next();
         }
         return nextOrientation;
     }
@@ -49,7 +49,7 @@ public class Orientation {
             nextOrientation = ONE;
         } else {
             currentOrientation = ONE;
-            previous();
+            nextOrientation = previous();
         }
         return nextOrientation;
     }
