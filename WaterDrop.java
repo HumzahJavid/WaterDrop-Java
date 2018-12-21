@@ -2,6 +2,7 @@
  *
  * @author humzah
  */
+import java.util.ArrayList;
 import java.util.List;
 //javafx standard imports?
 import javafx.application.Application;
@@ -38,8 +39,7 @@ public class WaterDrop extends Application {
     
     Gson gson;
     Type type;
-    // temporary level (whilst testing)
-    String level1;
+    ArrayList<String> savedLevels = new ArrayList<String>();
     public static void main(String[] args) {
         launch(args);
     }
@@ -71,8 +71,6 @@ public class WaterDrop extends Application {
 
         gson = new Gson();
         type = new TypeToken<List<List<Pipe>>>() {}.getType();
-        //temp save of first level
-        level1 = gson.toJson(grid.grid, type);
 
         grid.drawBorders(ctx);
         grid.draw(ctx);
@@ -99,6 +97,7 @@ public class WaterDrop extends Application {
                 rotatePipe(mouseEvent.getSceneX(), mouseEvent.getSceneY(), grid, ctx, direction);
                 graph.calculateMatrix();
                 if (graph.isLevelFinished() && endPipeClicked){
+                    save_level(grid.getDefaultLevelGrid());
                     newLevel(theStage, canvas, ctx, numberOfPipes, false);
                 } else if (!graph.isLevelFinished() && endPipeClicked){
                     // skipped level
@@ -155,8 +154,10 @@ public class WaterDrop extends Application {
             //resetting grid takes a long time, faster to run the constructor again
             //grid.reset(numColumns, numRows);
         } else{
-            System.out.println("Skipped the level... so loading original level");
-            List<List<Pipe>> loaded = gson.fromJson(level1, type);
+            System.out.println("Skipped level, loading a previosuly completed one");
+            int loadLevelIndex = (int)(Math.random() * savedLevels.size());
+            List<List<Pipe>> loaded = gson.fromJson(savedLevels.get(loadLevelIndex), type);
+            System.out.println("Load level from index " + loadLevelIndex);
             System.out.println(loaded);
             grid = new Grid(loaded);
             numColumns = grid.getSize()[0];
@@ -176,5 +177,11 @@ public class WaterDrop extends Application {
         grid.displayText(ctx, level);
         System.out.println("------------------------");
         graph.reset(grid, numberOfPipes);
+    }
+
+    public void save_level(List<List<Pipe>> defaultLevel){
+        String levelToSave = gson.toJson(defaultLevel, type);
+        savedLevels.add(levelToSave);
+        System.out.println("Number of levels saved = " + savedLevels.size());
     }
 }
