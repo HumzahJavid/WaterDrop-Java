@@ -96,6 +96,8 @@ public class Grid {
 
         //find and store random start and end from loaded level;
         loadRandomStartAndEnd();
+        this.pipeStart = this.grid.get(this.randomStart).get(0);
+        this.pipeEnd = this.grid.get(this.randomEnd).get(this.numRows - 1);
     }
 
     public List<List<Pipe>> getGrid() {
@@ -284,13 +286,10 @@ public class Grid {
 
     public String toString() {
         String string = "";
-
         for (int i = 0; i < this.grid.size(); i++) {
             string += "\n";
             string += this.grid.get(i).toString();
         }
-        string += this.grid.get(1).toString();
-
         return string;
     }
 	
