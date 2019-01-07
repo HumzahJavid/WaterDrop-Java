@@ -1,3 +1,52 @@
+//test to consider
+/*
+how many times can a user complete one level and skip it after making (0 or moves) ? 
+above but connected to goal pipe but then disconnects to skip it 
+
+check the size of levels list in these cases
+
+
+//add a line to say if no levels have been saved and a user skips, then generate a new random level
+//DOnt add levels which already exist in the array
+do both of the above using the algorithm from waterdrop JS 
+https://github.com/HumzahJavid/portfolio/blob/51d3ab63e975e8376311903027a6ce0bc1201c15/Websites/%233%20WaterDrop/myGame.js#L108-L185
+    //COMPLETE
+
+        //if the user completed a randomly generated level
+            
+                    //next level will be randomly generated
+
+
+
+        //if the user completes a level from solveable levels array
+            
+                    //next level will be randomly generated
+
+
+    //SKIPPED
+
+        //skipped a randomly generated level 
+
+                        //if no levels have been stored in localStorage
+                        createRandomLevel = true;
+                    Else
+
+                createRandomLevel = false;
+
+
+
+        //skipped a level from solveable level array
+                    createRandomLevel = false;
+
+
+
+
+
+
+
+
+
+*/
 /**
  *
  * @author humzah
@@ -40,6 +89,7 @@ public class WaterDrop extends Application {
     Gson gson;
     Type type;
     ArrayList<String> savedLevels = new ArrayList<String>();
+    boolean createRandomLevel = true;
     public static void main(String[] args) {
         launch(args);
     }
@@ -97,7 +147,6 @@ public class WaterDrop extends Application {
                 rotatePipe(mouseEvent.getSceneX(), mouseEvent.getSceneY(), grid, ctx, direction);
                 graph.calculateMatrix();
                 if (graph.isLevelFinished() && endPipeClicked){
-                    save_level(grid.getDefaultLevelGrid());
                     newLevel(theStage, canvas, ctx, numberOfPipes, false);
                 } else if (!graph.isLevelFinished() && endPipeClicked){
                     // skipped level
@@ -141,27 +190,77 @@ public class WaterDrop extends Application {
         double height = canvas.getHeight();
         double width = canvas.getWidth();
         int numColumns, numRows;
+        List<List<Pipe>> levelToSave = grid.getDefaultLevelGrid();
         
-        if (!skipped) {
+        // a level was completed WITHOUT skipping
+        if (!skipped){
+        
+            System.out.print("Completed level ");
+            // a randomly generated level was completed
+            if (createRandomLevel) {
+                System.out.println(" randomly generated");
+                //save the level for future use
+                saveLevel(levelToSave);
+            } else {
+                System.out.println(" loaded/solevable");
+            }
+            //generate a new random level
             height+=100;
             //increment canvas size by 100, to add a new row
             canvas.setHeight(height);
-            //canvas.setWidth(canvas.getWidth() + 100);
             level+=1;
             numRows = (int) height / 100;
             numColumns = (int) width / 100;
             grid = new Grid(numColumns, numRows);
+            createRandomLevel = true;
+            
+            System.out.println("THE NEXT LEVEL WILL BE RG");
             //resetting grid takes a long time, faster to run the constructor again
             //grid.reset(numColumns, numRows);
+
+        // a level was skipped 
         } else{
-            System.out.println("Skipped level, loading a previosuly completed one");
-            int loadLevelIndex = (int)(Math.random() * savedLevels.size());
-            List<List<Pipe>> loaded = gson.fromJson(savedLevels.get(loadLevelIndex), type);
-            System.out.println("Load level from index " + loadLevelIndex);
-            System.out.println(loaded);
-            grid = new Grid(loaded);
-            numColumns = grid.getSize()[0];
-            numRows = grid.getSize()[1];
+            System.out.print("Skipped level ");
+            if (createRandomLevel){
+                System.out.print("a randomly generated one ");
+                //if no levels exists
+                if(savedLevels.size() == 0){
+                    System.out.println("No levels exist, so generating a new one");
+                    //generate a new random level
+                    height+=100;
+                    //increment canvas size by 100, to add a new row
+                    canvas.setHeight(height);
+                    level+=1;
+                    numRows = (int) height / 100;
+                    numColumns = (int) width / 100;
+                    grid = new Grid(numColumns, numRows);
+                    createRandomLevel = true;
+                } else { 
+                    //load a previous one
+                    System.out.println("Loading a previosuly completed one\n");
+                    int loadLevelIndex = (int)(Math.random() * savedLevels.size());
+                    List<List<Pipe>> loaded = gson.fromJson(savedLevels.get(loadLevelIndex), type);
+                    System.out.println("Load level from index " + loadLevelIndex);
+                    System.out.println(loaded);
+                    grid = new Grid(loaded);
+                    numColumns = grid.getSize()[0];
+                    numRows = grid.getSize()[1];
+                    createRandomLevel = false;
+                }
+            //a previously completed level (a solveable level) was skipped 
+            } else {
+                System.out.print("Skipped level ");
+                //load a previous one
+                System.out.print("a previosuly completed one\n ");
+                int loadLevelIndex = (int)(Math.random() * savedLevels.size());
+                List<List<Pipe>> loaded = gson.fromJson(savedLevels.get(loadLevelIndex), type);
+                System.out.println("Load level from index " + loadLevelIndex);
+                System.out.println(loaded);
+                grid = new Grid(loaded);
+                numColumns = grid.getSize()[0];
+                numRows = grid.getSize()[1];
+                createRandomLevel = false;
+            }
         }
         ctx.clearRect(0, 0, width, height);
         numberOfPipes = ((numColumns - 2) * (numRows - 2)) + 2;
@@ -179,7 +278,7 @@ public class WaterDrop extends Application {
         graph.reset(grid, numberOfPipes);
     }
 
-    public void save_level(List<List<Pipe>> defaultLevel){
+    public void saveLevel(List<List<Pipe>> defaultLevel){
         String levelToSave = gson.toJson(defaultLevel, type);
         savedLevels.add(levelToSave);
         System.out.println("Number of levels saved = " + savedLevels.size());
