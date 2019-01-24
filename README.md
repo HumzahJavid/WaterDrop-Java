@@ -31,8 +31,10 @@ In addition to all of the features from the original game, I intend to implement
 ```
 git clone https://github.com/HumzahJavid/WaterDrop-Java
 ```
-- Run the code using the following command line argument
+- Run the code using the following command line arguments from ```C:\javafx-sdk-11.0.2>``` directory
 ```
+javac --module-path lib --add-modules=javafx.controls,com,objenesis,gson WaterDrop.java
+
 java --module-path lib --add-modules=javafx.controls,com,objenesis,gson --add-opens java.base/java.util=com --add-opens javafx.graphics/javafx.scene.paint=com --add-opens javafx.graphics/com.sun.prism.paint=com WaterDrop
 ```
 # Java version 8(possibly lower) to 10 :
