@@ -22,10 +22,21 @@ In addition to all of the features from the original game, I intend to implement
     <p> <strong> Skipping a level:</strong> Click on the <a class="end">END</a> pipe at any time to skip the current level. You will replay a level with the same level number, but it will be a randomly generated level.</p>
     <p> <strong> Exiting the game:</strong> Press the Escape key on the keyboard (you may need to click on outside the game screen)</p>
     <p> <strong> Scoring:</strong> Your score is calculated using the number of moves (rotations of a pipe) and time taken to complete a level, the faster you complete you a level, and the less moves you take means its a higher ranking score</p>
-    <p> The <a class="start">START</a> and <a class="end">END</a> pipes cannot be rotated, and do not contribute to your score</p> 
+    <p> The <a class="start">START</a> and <a class="end">END</a> pipes cannot be rotated, and do not contribute to your score</p>
+    
+# Java 11 (OpenJDK and OpenJFX)
+## Compile instructions (windows 10)
 
+-  Download the repository, extract the files to ```C:\javafx-sdk-11.0.2>``` (the javafx directory) 
+```
+git clone https://github.com/HumzahJavid/WaterDrop-Java
+```
+- Run the code using the following command line argument
+```
+java --module-path lib --add-modules=javafx.controls,com,objenesis,gson --add-opens java.base/java.util=com --add-opens javafx.graphics/javafx.scene.paint=com --add-opens javafx.graphics/com.sun.prism.paint=com WaterDrop
+```
 # Java version 8(possibly lower) to 10 :
-## Compile instructions (windows 7/11)
+## Compile instructions (windows 7/10)
 ### Using Command Prompt/PowerShell:
 1. Download the repository, extract the files(if necessary)
 ```
