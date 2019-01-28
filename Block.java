@@ -58,13 +58,13 @@ public class Block {
     }
 
     public void rotate(int direction) {
-		if (direction == 1){
+        if (direction == 1){
 			this.orientation.currentOrientation = this.orientation.next();
 		} else if (direction == -1){
 			this.orientation.currentOrientation = this.orientation.previous();
 		} else {
-			this.orientation.currentOrientation = this.orientation.next();
-		}
+            this.orientation.currentOrientation = this.orientation.next();
+        }
         this.update();
     }
 
