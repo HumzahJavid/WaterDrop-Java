@@ -26,16 +26,23 @@ In addition to all of the features from the original game, I intend to implement
     
 # Java 11 (OpenJDK and OpenJFX)
 ## Compile instructions (windows 10)
+### Using Command Prompt:
 
--  Download the repository, extract the files to ```C:\javafx-sdk-11.0.2>``` (the javafx directory) 
+-  Download/Clone the repository, and navigate to the repository directory 
 ```
 git clone https://github.com/HumzahJavid/WaterDrop-Java
+cd WaterDrop-Java
 ```
-- Run the code using the following command line arguments from ```C:\javafx-sdk-11.0.2>``` directory
+- Set your javafx install directory to a variable
 ```
-javac --module-path lib --add-modules=javafx.controls,com,objenesis,gson WaterDrop.java
+SET JFX_PATH="/javafx-sdk-11.0.2"
+```
 
-java --module-path lib --add-modules=javafx.controls,com,objenesis,gson --add-opens java.base/java.util=com --add-opens javafx.graphics/javafx.scene.paint=com --add-opens javafx.graphics/com.sun.prism.paint=com WaterDrop
+- Compile and Run the code using the following command line arguments
+```
+javac --module-path %JFX_PATH%/lib;lib --add-modules=javafx.controls,com,objenesis,gson WaterDrop.java
+
+java --module-path %JFX_PATH%/lib;lib --add-modules=javafx.controls,com,objenesis,gson --add-opens java.base/java.util=com --add-opens javafx.graphics/javafx.scene.paint=com --add-opens javafx.graphics/com.sun.prism.paint=com WaterDrop
 ```
 # Java version 8(possibly lower) to 10 :
 ## Compile instructions (windows 7/10)
