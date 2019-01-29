@@ -87,7 +87,7 @@ public class WaterDrop extends Application {
     boolean endPipeClicked;
     
     Gson gson;
-    Type type;
+    Type typeWrapperPipe;
     ArrayList<String> savedLevels = new ArrayList<String>();
     boolean createRandomLevel = true;
     public static void main(String[] args) {
@@ -120,7 +120,7 @@ public class WaterDrop extends Application {
         grid = new Grid(numColumns, numRows);
 
         gson = new Gson();
-        type = new TypeToken<List<List<Pipe>>>() {}.getType();
+        typeWrapperPipe = new TypeToken<WrapperOfPipes>() {}.getType();
 
         grid.drawBorders(ctx);
         grid.draw(ctx);
@@ -191,6 +191,10 @@ public class WaterDrop extends Application {
         double width = canvas.getWidth();
         int numColumns, numRows;
         List<List<Pipe>> levelToSave = grid.getDefaultLevelGrid();
+        //loaded level
+        List<List<Pipe>> loaded;
+        //temp wrapper for loaded level needed to be compatible with gson
+        WrapperOfPipes tempWrapper;
         
         // a level was completed WITHOUT skipping
         if (!skipped){
@@ -239,7 +243,8 @@ public class WaterDrop extends Application {
                     //load a previous one
                     System.out.println("Loading a previosuly completed one\n");
                     int loadLevelIndex = (int)(Math.random() * savedLevels.size());
-                    List<List<Pipe>> loaded = gson.fromJson(savedLevels.get(loadLevelIndex), type);
+                    tempWrapper = gson.fromJson(savedLevels.get(loadLevelIndex), typeWrapperPipe);
+                    loaded = tempWrapper.getWrappedPipes();
                     System.out.println("Load level from index " + loadLevelIndex);
                     System.out.println(loaded);
                     grid = new Grid(loaded);
@@ -253,7 +258,8 @@ public class WaterDrop extends Application {
                 //load a previous one
                 System.out.print("a previosuly completed one\n ");
                 int loadLevelIndex = (int)(Math.random() * savedLevels.size());
-                List<List<Pipe>> loaded = gson.fromJson(savedLevels.get(loadLevelIndex), type);
+                tempWrapper = gson.fromJson(savedLevels.get(loadLevelIndex), typeWrapperPipe);
+                loaded = tempWrapper.getWrappedPipes();
                 System.out.println("Load level from index " + loadLevelIndex);
                 System.out.println(loaded);
                 grid = new Grid(loaded);
@@ -279,7 +285,7 @@ public class WaterDrop extends Application {
     }
 
     public void saveLevel(List<List<Pipe>> defaultLevel){
-        String levelToSave = gson.toJson(defaultLevel, type);
+        String levelToSave = gson.toJson(new WrapperOfPipes(defaultLevel), typeWrapperPipe);
         savedLevels.add(levelToSave);
         System.out.println("Number of levels saved = " + savedLevels.size());
     }
