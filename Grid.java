@@ -185,7 +185,66 @@ public class Grid {
         Pipe endPipe = this.grid.get(this.randomEnd).get(this.numRows - 1);
         endPipe.draw(ctx);
     }
-	
+
+    public void draw(GraphicsContext ctx, int viewport, boolean drawEndPipe) {
+        // drawEndPipe taken from main class as scroll bar had methods to check if bottom of bar was reached (as opposed to calculating it here)
+        // viewport gives the value corresponding to location of scroll bar
+        this.drawExtras(ctx);
+
+        int viewportSize = 7;
+        int viewportLowerLimit = viewport/100;
+        int viewportUpperLimit = (viewportLowerLimit + viewportSize);
+        boolean skipTopRow = false;
+
+        if (viewport == 0){
+            skipTopRow = true;
+        }
+         
+        System.out.println("rowToDraw's limit (inclusive)= " + (viewportUpperLimit - 1));
+        // translate all pipes up by amount scroll bar moved down (all in units of 100)
+        ctx.translate(0, -viewport);
+        // rowToDraw controls the rows being drawn
+		for (int rowToDraw = viewportLowerLimit; rowToDraw < viewportUpperLimit; rowToDraw++) {
+            System.out.println("start rowToDraw = " + rowToDraw);
+            // skipping top row
+            // top row (rowToDraw == 0) is full of null pipes, so need to skip it to prevent null pointer error when drawing non-existent pipes around the startPipe
+            if (skipTopRow == true){
+                // to prevent infinite loop in rowToDraw (being reset to 1)
+                skipTopRow = false;
+                System.out.println("Skipping top row");
+                continue;
+            }
+            // skipping bottom row
+            // bottom row (rowToDraw == upperLimit - 1) is full of null pipes, need to skip it to prevent null pointer error when drawing non-existent pipes around the endPipe
+            if ((rowToDraw == (viewportUpperLimit - 1))  && (drawEndPipe)){
+                System.out.println("Skip bottom row ");
+                continue;
+            }
+
+            // draw each pipe 
+            for (int i = 1; i < numColumns - 1; i++) {
+                // to stick with convention of using i and j to access pipes
+                int j = rowToDraw;
+				Pipe pipe = this.grid.get(i).get(j);
+                pipe.draw(ctx);
+            }
+            System.out.println("end rowToDraw, pipes drawn at " + rowToDraw);
+        }
+
+        //if viewport is displaying the top of the level then draw start pipe 
+        if (viewport == 0) {
+            Pipe startPipe = this.grid.get(this.randomStart).get(0);
+            startPipe.draw(ctx);
+        }
+
+        //if viewport is displaying the bottom of the level then draw end pipe 
+        if (drawEndPipe){
+            Pipe endPipe = this.grid.get(this.randomEnd).get(this.numRows - 1);
+            endPipe.draw(ctx);
+        }
+        ctx.translate(0, viewport);
+    }
+    
 	public List<List<Pipe>> applyNullBorder(List<List<Pipe>> grid){
 		//left column
 		for (int i = 0; i < numRows; i++){
@@ -228,6 +287,11 @@ public class Grid {
         for (int j = 0; j < height; j += 100) {
             ctx.fillRect(0, j, width, 1);
         }
+    }
+
+    public void drawExtras(GraphicsContext ctx) {
+        this.drawBorders(ctx);
+        this.drawBoxes(ctx);
     }
 
     public int[] getGridReference(Pipe pipe) {

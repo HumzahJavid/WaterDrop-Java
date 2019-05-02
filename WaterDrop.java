@@ -111,8 +111,6 @@ public class WaterDrop extends Application {
                 //if left click, rotate clockwise
 				if (mouseEvent.getButton() == javafx.scene.input.MouseButton.PRIMARY) {
                     direction = 1;
-                    
-                    newLevel(theStage, canvas, ctx, numberOfPipes, false);
                 //else if right click, rotate anticlokwise
 				} else if (mouseEvent.getButton() == javafx.scene.input.MouseButton.SECONDARY){
                     direction = -1;
@@ -123,33 +121,13 @@ public class WaterDrop extends Application {
                 rotatePipe(mouseEvent.getSceneX(), mouseEvent.getSceneY(), grid, ctx, direction);
                 graph.calculateMatrix();
                 if (graph.isLevelFinished() && endPipeClicked){
-                    newLevel(theStage, canvas, ctx, numberOfPipes, false);
+                    newLevel(theStage, canvas, ctx, numberOfPipes, false, numRows);
                 } else if (!graph.isLevelFinished() && endPipeClicked){
                     // skipped level
-                    newLevel(theStage, canvas, ctx, numberOfPipes, true);
+                    newLevel(theStage, canvas, ctx, numberOfPipes, true, numRows);
                 }
             }
         };
-
-        /* not working at all https://openjfx.io/javadoc/11/javafx.graphics/javafx/scene/input/ScrollEvent.html
-        EventHandler<javafx.scene.input.ScrollEvent> scrollingEventHandler
-                = new EventHandler<javafx.scene.input.ScrollEvent>() {
-            @Override
-            public void handle(javafx.scene.input.ScrollEvent scrollEvent) {
-                System.out.println("Scrolledevent captured");
-            }
-                };*/
-
-
-        // 3 events:
-        /*
-
-        click to get initial true position of scroll bar (set to old value)
-        drag (to set a drag variable to true )
-        release (checks drag variable, if true, then get new position of scroll bar (set to new value))
-
-*/
-
         //Creating the mouse event handler for scroll bar 
 
         EventHandler<javafx.scene.input.MouseEvent> scrollBarClick
@@ -190,47 +168,50 @@ public class WaterDrop extends Application {
             }
         };
 
-
-        
-
         //Adding the event handler 
         canvas.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-        //vScroll.addEventHandler(javafx.scene.input.ScrollEvent.ANY, scrollingEventHandler);
-        // vScroll.addEventHandler(MouseEvent.ANY, scrollingEventHandler);
-
-        //fix this to check the distance scrolled,
-
-        // check distance in scales of 100
-
-
-
         vScroll.addEventHandler(MouseEvent.ANY, e-> {
             // System.out.println("event = " + e);
-            System.out.println("event = type " + e.getEventType());
             if (e.getEventType() == MouseEvent.MOUSE_CLICKED){
-                System.out.println("start --------------------------------------");
+                newScrollValue = vScroll.getValue();
+                System.out.println("mouse CLICKED at value " + newScrollValue + " \nrounded value = " + roundScrollBar(newScrollValue));
+                vScroll.setValue(roundScrollBar(newScrollValue));
                 
-                // oldScrollValue = vScroll.getValue(); 
-                // System.out.println("TRUE start drag value " + oldScrollValue);
-                // System.out.println("drag? initiate click " + e.isDragDetect());
-                
+                ctx.setFill(Color. WHITE);
+                ctx.fillRect(0, 0, width, height);
+                int viewPort = roundScrollBar(vScroll.getValue());
+                boolean reachedBottomOfView = false;
+                if (viewPort == vScroll.getMax()){
+                    reachedBottomOfView = true;
+                }
+                //redundant second arg (could be vScroll.getValue()), but is defensive
+                grid.draw(ctx, viewPort, reachedBottomOfView);
             } else if (e.getEventType() == MouseEvent.MOUSE_RELEASED){
-                // System.out.println("this is the current stats:\n");
                 newScrollValue = vScroll.getValue();
                 if (useDrag){
                     System.out.println(" the drag var was set to true = " + vScroll.getValue() + " -> rounded: " + roundScrollBar(vScroll.getValue()));
                     vScroll.setValue(roundScrollBar(vScroll.getValue()));
+                } else {
+                    System.out.println("it was currently RELEASAED at value " + newScrollValue);
+                    System.out.println("draw grid beginning from " + roundScrollBar(newScrollValue));
                 }
-
                 
-                System.out.println("dragged? " + useDrag);
-                System.out.println("it was currently RELEASAED at value " + newScrollValue);
-                System.out.println("the old value was " + oldScrollValue);
-                System.out.println("the difference is " + (newScrollValue - oldScrollValue) + " \n setting drag to false... update view port, edit scrolling length to match one one row (increase in increments of numRows)");
-                System.out.println("------------------end-----------------------");
-
+                System.out.println("setting drag to false... update view port, edit scrolling length to match one one row (increase in increments of numRows)");
+                //grid.draw()
+                
                 //whether or not the mouse was dragged, set it to false (for next drag detection loop)
                 useDrag = false;
+                
+                //reset canvas 
+                ctx.setFill(Color.WHITE);
+                ctx.fillRect(0, 0, width, height);
+                int viewPort = roundScrollBar(vScroll.getValue());
+                boolean reachedBottomOfView = false;
+                if (viewPort == vScroll.getMax()){
+                    reachedBottomOfView = true;
+                }
+                //redundant second arg (could be vScroll.getValue()), but is defensive
+                grid.draw(ctx, viewPort, reachedBottomOfView);
 
             } else if (e.getEventType() == MouseEvent.DRAG_DETECTED){
                 // System.out.println("mouse was dragged ******************************************************** setting drag to true");
@@ -238,13 +219,9 @@ public class WaterDrop extends Application {
                 useDrag = true;
             }
         });
-        //vScroll.addEventHandler(MouseEvent.MOUSE_PRESSED, scrollBarClick);
-        //vScroll.addEventHandler(MouseEvent.DRAG_DETECTED, scrollBarScroll);
-        //vScroll.addEventHandler(MouseEvent.MOUSE_RELEASED, scrollBarRelease);
 
         //Remove event handler
         //canvas.removeEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
-        //root.getChildren().addAll(canvas);
         root.getChildren().addAll(scrollPane);
         theStage.show();
     }
@@ -260,29 +237,20 @@ public class WaterDrop extends Application {
                     //used to ignore any grid spaces which do not have pipe assigned
                 } else if (((x >= pipe.leftEdge) && (x <= pipe.rightEdge)) && ((y >= pipe.topEdge) && (y <= pipe.bottomEdge))) {
 					if (pipe == grid.pipeStart){
-						startPipeClicked = true;
+                        startPipeClicked = true;
 					} else if (pipe == grid.pipeEnd){
 						endPipeClicked = true;
 					} else {
 						pipe.rotate(ctx, direction);
-					}
+                    }
+                    System.out.println("clicked pipe: " + pipe);
                 }
             }
         }
     }
 
-    public void newLevel(Stage theStage, Canvas canvas, GraphicsContext ctx, int numberOfPipes, Boolean skipped) {
-        if (!skipped) {
-            //increment canvas size by 100, to add a new row
-            // * note: why is this 200?
-            canvas.setHeight(canvas.getHeight() + 100);
-            //canvas.setWidth(canvas.getWidth() + 100);
-            vScroll.setMax(vScroll.getMax() + 100);
-            vScroll.setVisibleAmount(100);
-            //vScroll.setVisibleAmount(vScroll.getVisibleAmount() + 100);
-        } else{
-            System.out.println("Skipped the level");
-        }
+    public void newLevel(Stage theStage, Canvas canvas, GraphicsContext ctx, int numberOfPipes, Boolean skipped, int oldNumRows) {
+        //may need oldNumRows later, to ensure a new row gets added to the grid
         double height = canvas.getHeight();
         double width = canvas.getWidth();
 
@@ -290,6 +258,22 @@ public class WaterDrop extends Application {
 
         int numRows = (int) height / 100;
         int numColumns = (int) width / 100;
+
+        if (!skipped) {
+            //> 10 rows would be a good number to begin actual scrolling (maximises canvas size on current monitor setup)
+            //increment max scroll bar by 100 (for additional row of pipes)
+            vScroll.setMax(vScroll.getMax() + 100);
+            // if second level with 1 additional row then set the visible amount to be half of max scrollable value
+            if (numRows == 8){
+                vScroll.setVisibleAmount(50);
+            } else if (numRows > 8) {
+                //always leave a consistent 100 block scroll bar value (representing current row in level)
+                vScroll.setVisibleAmount(100);
+            }
+            System.out.println("viewport max  = " + vScroll.getMax());
+            //if the level was not skipped, then 
+            numRows = grid.numRows + 1;
+        }
         numberOfPipes = ((numColumns - 2) * (numRows - 2)) + 2;
         ctx.setStroke(Color.BLACK);
         ctx.setLineWidth(2);

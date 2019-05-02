@@ -60,7 +60,7 @@ public class Graph {
                 } else {
                     // if the edge has not been visited
                     if (visitedEdges[numberPipeFrom][i] == 0) {
-                        System.out.println("visiting edge: pipe #" + numberPipeFrom + " is connected to " + i);
+                        // System.out.println("visiting edge: pipe #" + numberPipeFrom + " is connected to " + i);
                         // update state of visited edges
                         visitedEdges[numberPipeFrom][i] = 1;
                         visitedEdges[i][numberPipeFrom] = 1;
