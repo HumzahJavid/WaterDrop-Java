@@ -15,6 +15,8 @@ import javafx.scene.canvas.GraphicsContext;
 //event handling
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
 //colour of pipe
 import javafx.scene.paint.Color;
 //will be used in fonts when displaying level and score
@@ -101,10 +103,31 @@ public class WaterDrop extends Application {
         grid.drawBoxes(ctx);
         grid.displayText(ctx, level);
 		System.out.println("------------------------");
-		graph = new Graph(grid, numberOfPipes);
+        graph = new Graph(grid, numberOfPipes);
+        
+        // keyboard event handler
+        EventHandler<javafx.scene.input.KeyEvent> keyInputEventHandler = new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(javafx.scene.input.KeyEvent keyEvent){
+                switch (keyEvent.getCode()) {
+                    case S: //KeyCode.S
+                        System.out.println("skipping level");
+                        newLevel(theStage, canvas, ctx, numberOfPipes, false, numRows);
+                        break;
+                    case UP:
+                        System.out.println("implement move view up by one row");
+                        break;
+                    case DOWN:
+                        System.out.println("implement move view down by one row");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+
         //Creating the mouse event handler 
-        EventHandler<javafx.scene.input.MouseEvent> eventHandler
-                = new EventHandler<MouseEvent>() {
+        EventHandler<javafx.scene.input.MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(javafx.scene.input.MouseEvent mouseEvent) {
                 int direction;
@@ -128,48 +151,13 @@ public class WaterDrop extends Application {
                 }
             }
         };
-        //Creating the mouse event handler for scroll bar 
 
-        EventHandler<javafx.scene.input.MouseEvent> scrollBarClick
-        = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(javafx.scene.input.MouseEvent mouseEvent) {
-                System.out.println("start --------------------------------------");
-                
-                oldScrollValue = vScroll.getValue(); 
-                System.out.println("TRUE start drag value " + oldScrollValue);
-            }
-        };
-
-        EventHandler<javafx.scene.input.MouseEvent> scrollBarScroll
-                = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(javafx.scene.input.MouseEvent mouseEvent) {
-                System.out.println("setting drag to true ");
-                mouseEvent.setDragDetect(true);
-            }
-        };
-
-        EventHandler<javafx.scene.input.MouseEvent> scrollBarRelease
-                = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(javafx.scene.input.MouseEvent mouseEvent) {
-            
-                System.out.println("was mouse dragged " + mouseEvent.isDragDetect());
-
-                System.out.println("this is the current stats:\n");
-                newScrollValue = vScroll.getValue();
-                
-                System.out.println("it was currently RELEASAED at value " + newScrollValue);
-                System.out.println("the old value " + oldScrollValue);
-                System.out.println("the difference is " + (newScrollValue - oldScrollValue) + " \n setting drag to false... update view port, edit scrolling length to match one one row (increase in increments of numRows)");
-                mouseEvent.setDragDetect(false);
-                System.out.println("------------------end-----------------------");
-            }
-        };
-
-        //Adding the event handler 
+        //Adding the event handler
         canvas.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+        // allows the keyboard events to be detected
+        canvas.setFocusTraversable(true);
+        canvas.addEventHandler(KeyEvent.KEY_PRESSED, keyInputEventHandler);
+        // create and add the event handler for scrollbar
         vScroll.addEventHandler(MouseEvent.ANY, e-> {
             // System.out.println("event = " + e);
             if (e.getEventType() == MouseEvent.MOUSE_CLICKED){
