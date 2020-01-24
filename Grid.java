@@ -295,7 +295,7 @@ public class Grid {
 	
 	public void printer(){
 		System.out.println("state of grid");
-		for (int i = 0; i < 14; i++){
+		for (int i = 0; i < numColumns; i++){
 			System.out.println("i = " + i);
             System.out.println(this.grid.get(i));//.set(i, null);
 		}

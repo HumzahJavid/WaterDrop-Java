@@ -102,7 +102,7 @@ public class WaterDrop extends Application {
         theStage.setTitle("WaterDrop prototype");
         theStage.setScene(theScene);
 
-        canvas = new Canvas(1400, 700);
+        canvas = new Canvas(1000, 400);
         ctx = canvas.getGraphicsContext2D();
         double height = ctx.getCanvas().getHeight();
         double width = ctx.getCanvas().getWidth();

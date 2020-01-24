@@ -10,6 +10,7 @@ import java.util.List;
 
 public class Graph {
     private List<List<Pipe>> vertices;
+    private int numColumns;
     private int numRows;
     private int[][] adjMatrix;
     private int numberOfPipes;
@@ -26,6 +27,7 @@ public class Graph {
         this.grid = grid;
         this.vertices = grid.getGrid();
         this.numRows = grid.numRows;
+        this.numColumns = grid.numColumns;
         this.numberOfPipes = numberOfPipes;
         this.populateAdjacencyMatrix();
     }
@@ -73,11 +75,11 @@ public class Graph {
     }
 
     // may have potential use later
-    // converts (1, 2) to #13
+    // converts (1, 2) to #13 (for numColumns == 14)
     public int gridRefToPipeNumber(int[] gridRef) {
         int x = gridRef[0];
         int y = gridRef[1];
-        return ((x + 1) + ((y - 1) * 12));
+        return ((x + 1) + ((y - 1) * numColumns-2));
     }
 
     // checks if pipeA and pipeB are connected
@@ -116,10 +118,11 @@ public class Graph {
         return pathToGoalPipe;
     }
 
-    // converts #13 to (1, 2)
+    // converts #13 to (1, 2) (for numColumns == 14)
     public int[] pipeNumberToGridRef(int pipeNumber) {
-        int x = pipeNumber % 12;
-        int y = (pipeNumber / 12) + 1;
+        int nextRowIndicator = numColumns - 2;
+        int x = pipeNumber % nextRowIndicator;
+        int y = (pipeNumber / nextRowIndicator) + 1;
         // START and END pipes dont fit the above formula
         if (pipeNumber == 0) {
             x = grid.randomStart;
@@ -129,9 +132,9 @@ public class Graph {
             y = numRows - 1;
         } else {
             // the rightmost pipes, using the forumla above
-            // produces a grid reference with the following offset (x-12, y+1)
+            // produces a grid reference with the following offset (x-nextRowIndicator, y+1)
             if (x == 0) {
-                x = 12;
+                x = nextRowIndicator;
                 y = y - 1;
             }
         }
@@ -139,7 +142,6 @@ public class Graph {
         return reference;
     }
 
-    //
     public void populateAdjacencyMatrix() {
         this.adjMatrix = new int[numberOfPipes][numberOfPipes];
         Pipe pipeA;
