@@ -126,8 +126,16 @@ public class WaterDrop extends Application {
         grid.draw(ctx);
         grid.drawBoxes(ctx);
         grid.displayText(ctx, level);
-		System.out.println("------------------------");
 		graph = new Graph(grid, numberOfPipes);
+        // generate a classic level requires converter grid graph and blank screen
+        Converter conv = new Converter();
+        generateClassicLevel(grid, conv, canvas, ctx);
+        graph = new Graph(grid, numberOfPipes);
+        grid.drawBorders(ctx);
+        grid.draw(ctx);
+        grid.drawBoxes(ctx);
+        grid.displayText(ctx, level);
+
         //Creating the mouse event handler 
         EventHandler<javafx.scene.input.MouseEvent> eventHandler
                 = new EventHandler<MouseEvent>() {
@@ -288,5 +296,11 @@ public class WaterDrop extends Application {
         String levelToSave = gson.toJson(new WrapperOfPipes(defaultLevel), typeWrapperPipe);
         savedLevels.add(levelToSave);
         System.out.println("Number of levels saved = " + savedLevels.size());
+    }
+
+    // temporary method
+    public void generateClassicLevel(Grid grid, Converter conv, Canvas canvas, GraphicsContext ctx){
+        List<List<Pipe>> classicLevel = grid.loadClassicLevel(conv.getPipeTypeGrid());
+        grid.blankScreen(canvas, ctx);
     }
 }

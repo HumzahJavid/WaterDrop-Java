@@ -4,6 +4,7 @@
  */
 import java.util.List;
 import java.util.ArrayList;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -180,6 +181,12 @@ public class Grid {
             block.update();
         }
         endPipe.updatesEdges();
+    }
+
+    public void blankScreen(Canvas canvas, GraphicsContext ctx){
+        ctx.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        ctx.setStroke(Color.BLACK);
+        ctx.setLineWidth(2);
     }
 
     public void displayText(GraphicsContext ctx, int level){
@@ -359,5 +366,71 @@ public class Grid {
         this.updatePipePosition();
         this.updateStartEndPipePosition();
         System.out.println("Reset grid");
+    }
+
+    public List<List<Pipe>> loadClassicLevel(String[][] level) {
+        Pipe addedPipe;
+        // begin classic level loading
+        int numColumnsClassic = level.length;
+        int numRowsClassic = level[0].length;
+        // used to clone pipes
+        Cloner cloner = new Cloner();
+        this.setupDefaultPipes();
+
+        List<List<Pipe>> grid2 = new ArrayList<List<Pipe>>(numColumnsClassic);
+        // creates the spaces for the pipes
+        for (int i = 0; i < numColumnsClassic; i++) {
+            grid2.add(new ArrayList<Pipe>(numRowsClassic));
+        }
+
+        // fills in playable pipes
+        for (int i = 1; i < (numColumnsClassic - 1); i++) {
+            for (int j = 1; j < numRowsClassic; j++) {
+                String currentPipeString = level[i][j];
+                switch (currentPipeString) {
+                    case "pipeA": {
+                        addedPipe = cloner.deepClone(this.pipeA);
+                    }
+                        break;
+                    case "pipeB": {
+                        addedPipe = cloner.deepClone(this.pipeB);
+                    }
+                        break;
+                    case "pipeC": {
+                        addedPipe = cloner.deepClone(this.pipeC);
+                    }
+                        break;
+                    default: {
+                        addedPipe = cloner.deepClone(this.pipeA);
+                    }
+                }
+                grid2.get(i).add(addedPipe);
+                addedPipe.setGridReference(i, (j - 1));
+            }
+        }
+
+        grid2 = this.applyNullBorder(grid2);
+
+        // set random start and end to match the classic level
+        for (int i = 0; i < level.length; i++) {
+            for (int j = 0; j < level[i].length; j++) {
+                if ("pipeStart".equals(level[i][j])) {
+                    randomStart = i;
+                }
+                if ("pipeEnd".equals(level[i][j])) {
+                    randomEnd = i;
+                }
+            }
+        }
+
+        grid2.get(this.randomStart).set(0, this.pipeStart);
+        grid2.get(this.randomEnd).set(this.numRows - 1, this.pipeEnd);
+
+        this.grid = grid2;
+        // moves each generated pipe to the correct grid square (using its grid reference)
+        this.updatePipePosition();
+        this.updateStartEndPipePosition();
+
+        return grid2;
     }
 }
