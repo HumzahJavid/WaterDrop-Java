@@ -23,6 +23,7 @@ public class Pipe {
     Color colour;
 	int gridX;
 	int gridY;
+    String pipeType;
 
     Pipe(List<Block> blocks, Color colour) {
         this.blocks = blocks;

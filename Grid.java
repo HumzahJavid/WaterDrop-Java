@@ -119,6 +119,7 @@ public class Grid {
             }
         };
         this.pipeA = new Pipe(pipeABlock, Color.web("#54F3B7"));
+        this.pipeA.pipeType = "A";
 
         List<Block> pipeBBlocks = new ArrayList<Block>() {
             {
@@ -127,6 +128,7 @@ public class Grid {
             }
         };
         this.pipeB = new Pipe(pipeBBlocks, Color.web("#FFC0CB"));
+        this.pipeB.pipeType = "B";
 
         List<Block> pipeCBlocks = new ArrayList<Block>() {
             {
@@ -136,6 +138,7 @@ public class Grid {
         };
         this.pipeC = new Pipe(pipeCBlocks, Color.BISQUE);//#F3F354
         //water colour #54E7F2
+        this.pipeC.pipeType = "C";
 
         List<Block> pipeStartEndBlocks = new ArrayList<Block>() {
             {
@@ -144,6 +147,8 @@ public class Grid {
         };
         this.pipeStart = new Pipe(cloner.deepClone(pipeStartEndBlocks), Color.RED);
         this.pipeEnd = new Pipe(cloner.deepClone(pipeStartEndBlocks), Color.BLUE);
+        this.pipeStart.pipeType = "Start";
+        this.pipeEnd.pipeType = "End";
     }
 
     private void updatePipePosition() {
@@ -300,14 +305,6 @@ public class Grid {
         return string;
     }
 	
-	public void printer(){
-		System.out.println("state of grid");
-		for (int i = 0; i < numColumns; i++){
-			System.out.println("i = " + i);
-            System.out.println(this.grid.get(i));//.set(i, null);
-		}
-    }
-    
     // identical to the constructor (with same args)
     // very slow!!!
     public void reset(int numColumns, int numRows) {
