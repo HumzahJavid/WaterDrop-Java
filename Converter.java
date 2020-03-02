@@ -88,6 +88,16 @@ public class Converter {
         return obj.toString();
     }
 
+    public void printClassicLevel() {
+        System.out.println("printing classic level below");
+        for (int i = 0; i < pipeTypeGrid.length; i++) {
+            for (int j = 0; j < pipeTypeGrid[i].length; j++) {
+                System.out.print(pipeTypeGrid[i][j] + " ");
+            }
+            System.out.println("");
+        }
+        System.out.println("");
+    }
 }
 
 // https://www.tutorialspoint.com/json_simple/json_simple_quick_guide.htm

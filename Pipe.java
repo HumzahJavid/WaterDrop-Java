@@ -161,7 +161,7 @@ public class Pipe {
         //pipeString += (this.blocks.toString());
 		//pipeString += "Left: " + this.leftEdge + " Right: " + this.rightEdge + " Top: " + this.topEdge + " Bottom: " + this.bottomEdge;
 		pipeString += this.getGridReference();
-		String pipeString2 = "[]";
+        pipeString = this.pipeType;
 
         return pipeString;
     }

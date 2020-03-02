@@ -199,6 +199,8 @@ public class WaterDrop extends Application {
         double width = canvas.getWidth();
         int numColumns, numRows;
         List<List<Pipe>> levelToSave = grid.getDefaultLevelGrid();
+        System.out.println("this is the level to save");
+        System.out.println(levelToSave);
         //loaded level
         List<List<Pipe>> loaded;
         //temp wrapper for loaded level needed to be compatible with gson
@@ -301,6 +303,7 @@ public class WaterDrop extends Application {
     // temporary method
     public void generateClassicLevel(Grid grid, Converter conv, Canvas canvas, GraphicsContext ctx){
         List<List<Pipe>> classicLevel = grid.loadClassicLevel(conv.getPipeTypeGrid());
+        conv.printClassicLevel();
         grid.blankScreen(canvas, ctx);
     }
 }

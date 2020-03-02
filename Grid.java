@@ -427,7 +427,7 @@ public class Grid {
         // moves each generated pipe to the correct grid square (using its grid reference)
         this.updatePipePosition();
         this.updateStartEndPipePosition();
-
+        this.gridDefault = cloner.deepClone(grid2);
         return grid2;
     }
 }
