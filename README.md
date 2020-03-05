@@ -44,6 +44,16 @@ javac --module-path %JFX_PATH%/lib;lib --add-modules=javafx.controls,com,objenes
 
 java --module-path %JFX_PATH%/lib;lib --add-modules=javafx.controls,com,objenesis,gson --add-opens java.base/java.util=com --add-opens javafx.graphics/javafx.scene.paint=com --add-opens javafx.graphics/com.sun.prism.paint=com WaterDrop
 ```
+
+### Using PowerShell:
+- - Compile and Run the code using the following command line arguments
+```
+javac --module-path "$env:JFX_PATH/lib;lib" --add-modules=javafx.controls,com,objenesis,gson WaterDrop.java
+
+java --module-path "$env:JFX_PATH/lib;lib" --add-modules=javafx.controls,com,objenesis,gson --add-opens java.base/java.util=c
+om --add-opens javafx.graphics/javafx.scene.paint=com --add-opens javafx.graphics/com.sun.prism.paint=com WaterDrop
+```
+
 # Java version 8(possibly lower) to 10 :
 ## Compile instructions (windows 7/10)
 ### Using Command Prompt/PowerShell:
